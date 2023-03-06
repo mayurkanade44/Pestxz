@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const AdminSchema = new mongoose.Schema(
   {
-    service: { type: String, required: true },
-    options: [String],
+    serviceName: { type: String, required: true },
+    serviceOption: [String],
     company: {
       type: mongoose.Types.ObjectId,
       ref: "Company",
