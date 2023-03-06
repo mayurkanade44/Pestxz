@@ -2,9 +2,21 @@ import mongoose from "mongoose";
 
 const LocationSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    address: { type: String, required: true },
-    email: { type: String },
+    floor: { type: String, required: true },
+    location: { type: String, required: true },
+    count: { type: Number },
+    services: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "Admin",
+        required: true,
+      },
+    ],
+    shipTo: {
+      type: mongoose.Types.ObjectId,
+      ref: "ShipTo",
+      required: true,
+    },
   },
   { timestamps: true }
 );
