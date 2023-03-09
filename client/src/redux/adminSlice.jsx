@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { authFetch, unauthorizedResponse } from "../utils/auth";
 
@@ -10,7 +11,8 @@ const initialState = {
   shipToNumber: "",
   floor: "",
   location: "",
-  client: {},
+  singleClientDetails: {},
+  singleClientLocations: [],
   redirect: false,
 };
 
@@ -19,6 +21,19 @@ export const clientRegister = createAsyncThunk(
   async (form, thunkAPI) => {
     try {
       const res = await authFetch.post("/shipTo/addShipTo", form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const singleClient = createAsyncThunk(
+  "client/singleClient",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.get(`/location/singleShipTo/${id}`);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -43,11 +58,23 @@ const adminSlice = createSlice({
       })
       .addCase(clientRegister.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
-        state.client = payload.shipTo;
+        state.floor = payload.id;
         state.redirect = true;
         toast.success(payload.msg);
       })
       .addCase(clientRegister.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(singleClient.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(singleClient.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.singleClientDetails = payload.clientDetails;
+        state.singleClientLocations = payload.clientLocations;
+      })
+      .addCase(singleClient.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       });

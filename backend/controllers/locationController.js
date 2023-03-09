@@ -57,3 +57,20 @@ export const editLocation = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
+
+export const getSingleShipTo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const clientDetails = await ShipTo.findById(id);
+    if (!clientDetails)
+      return res.status(404).json({ msg: "Client details not found" });
+
+    const clientLocations = await Location.find({ shipTo: id }).select(
+      "floor location"
+    );
+    return res.status(200).json({ clientDetails, clientLocations });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};

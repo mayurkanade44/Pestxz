@@ -26,7 +26,7 @@ export const addShipTo = async (req, res) => {
 
     return res
       .status(201)
-      .json({ msg: `${shipTo.shipToName} has been added`, shipTo });
+      .json({ msg: `${shipTo.shipToName} has been added`, id: shipTo._id });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

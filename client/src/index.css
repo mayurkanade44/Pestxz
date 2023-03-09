@@ -48,6 +48,7 @@ html {
   --red-dark: #842029;
   --green-light: #d1e7dd;
   --green-dark: #0f5132;
+  --green:#198754;
 
   /* fonts  */
   --headingFont: "Roboto Condensed", Sans-Serif;
@@ -182,6 +183,10 @@ ul {
 .btn-hero {
   font-size: 1.25rem;
   padding: 0.5rem 1.25rem;
+}
+.btn-success {
+  background: var(--green);
+  color: var(--white);
 }
 .btn-danger {
   background: var(--red-light);

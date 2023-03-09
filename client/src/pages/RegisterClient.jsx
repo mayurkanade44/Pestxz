@@ -15,7 +15,7 @@ const RegisterClient = () => {
     shipToEmail,
     shipToNumber,
     adminLoading,
-    client,
+    floor,
     redirect,
   } = useSelector((store) => store.admin);
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const RegisterClient = () => {
   useEffect(() => {
     if (redirect) {
       setTimeout(() => {
-        navigate(`/dashboard/client/${client._id}`);
+        navigate(`/dashboard/client/${floor}`);
       }, 1000);
       setTimeout(() => {
         dispatch(clearAdminValues());
