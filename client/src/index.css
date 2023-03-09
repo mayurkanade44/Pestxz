@@ -616,3 +616,70 @@ ul {
 .small-bar .active .icon {
   color: var(--primary-500);
 }
+
+/*===================== Add Client =====================*/
+
+.add-client {
+  border-radius: var(--borderRadius);
+  width: 100%;
+  background: var(--white);
+  padding: 2rem;
+  box-shadow: var(--shadow-2);
+}
+.add-client h3 {
+  margin-top: 0;
+}
+.add-client .form {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+}
+.add-client .form-row {
+  margin-bottom: 0;
+}
+.add-client .form-center {
+  display: grid;
+  row-gap: 0.5rem;
+}
+.add-client .form-center button {
+  align-self: end;
+  height: 35px;
+  margin-top: 1rem;
+}
+.add-client .btn-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+  align-self: flex-end;
+  margin-top: 0.5rem;
+}
+.add-client .btn-container button {
+  height: 35px;
+}
+.add-client .clear-btn {
+  background: var(--grey-500);
+}
+.add-client .clear-btn:hover {
+  background: var(--black);
+}
+@media (min-width: 992px) {
+  .add-client .form-center {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    column-gap: 1rem;
+  }
+  .add-client .btn-container {
+    margin-top: 0;
+  }
+}
+@media (min-width: 1120px) {
+  .add-client .form-center {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .add-client .form-center button {
+    margin-top: 0;
+  }
+}

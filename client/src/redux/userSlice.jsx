@@ -44,7 +44,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, { payload }) => {
         state.userLoading = false;
         state.user = payload.user;
-        localStorage.setItem("user", JSON.stringify(payload.user))
+        localStorage.setItem("user", JSON.stringify(payload.user));
         toast.success(payload.msg);
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
