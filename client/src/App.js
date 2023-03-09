@@ -1,4 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ProtectedRoute } from "./components";
 
 import {
   Landing,
@@ -13,9 +16,17 @@ import {
 function App() {
   return (
     <Router>
+      <ToastContainer position="top-center" autoClose={2000} />
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/dashboard" element={<Dashboard />}>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Stats />} />
           <Route path="add-client" element={<RegisterClient />} />
           <Route path="report" element={<Report />} />

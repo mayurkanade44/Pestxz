@@ -1,27 +1,69 @@
-import { Link } from "react-router-dom";
 import main from "../images/pest.png";
-import logo from "../images/logo.png";
+import { InputRow } from "../components";
+import { handleUser, loginUser } from "../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+  const navigate = useNavigate();
+  const { email, password, userLoading, user } = useSelector(
+    (store) => store.user
+  );
+  const dispatch = useDispatch();
+
+  const handleChange = (e) => {
+    let name = e.target.name,
+      value = e.target.value;
+
+    dispatch(handleUser({ name, value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }));
+  };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
+    }
+
+    // eslint-disable-next-line
+  }, [user]);
+
   return (
     <div className="landing">
-      
-      <div className="container page">
-        {/* info */}
+      <div className="container page mt-5">
+        <img src={main} alt="job hunt" className="img main-img" />
         <div className="info">
-          <h1>
+          <h1 className="text-center">
             Pest <span>Tracking</span> Portal
           </h1>
-          <p>
-            Crucifix narwhal street art asymmetrical, humblebrag tote bag pop-up
-            fixie raclette taxidermy craft beer. Brunch bitters synth, VHS
-            crucifix heirloom meggings bicycle rights.
-          </p>
-          <Link to="/" className="btn btn-hero">
-            Login
-          </Link>
+          <form action="submit" className="form" onSubmit={handleSubmit}>
+            <InputRow
+              type="email"
+              name="email"
+              value={email}
+              handleChange={handleChange}
+            />
+            <InputRow
+              type="password"
+              name="password"
+              value={password}
+              handleChange={handleChange}
+            />
+            <button
+              type="submit"
+              className="btn btn-block"
+              disabled={userLoading}
+            >
+              {userLoading ? "loading..." : "Login"}
+            </button>
+          </form>
         </div>
-        <img src={main} alt="job hunt" className="img main-img" />
       </div>
     </div>
   );

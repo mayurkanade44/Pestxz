@@ -6,7 +6,7 @@ import { toggleSidebar } from "../redux/userSlice";
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
-  const { isSidebarOpen } = useSelector((store) => store.user);
+  const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
 
   const toggle = () => {
@@ -34,7 +34,7 @@ const Navbar = () => {
             onClick={() => setShowLogout(!showLogout)}
           >
             <FaUserCircle />
-            Mayur
+            {user.name}
             <FaCaretDown />
           </button>
           <div className={showLogout ? "dropdown show-dropdown" : "dropdown"}>
