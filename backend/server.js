@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import morgan from "morgan";
 
+import userRouter from "./routes/userRoute.js";
 import companyRouter from "./routes/companyRoute.js";
 import shipToRouter from "./routes/shipToRoute.js";
 import adminRouter from "./routes/adminRoute.js";
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV !== "production") {
 
 app.use(express.json());
 
+app.use("/api/user", userRouter);
 app.use("/api/company", companyRouter);
 app.use("/api/shipTo", shipToRouter);
 app.use("/api/admin", adminRouter);
