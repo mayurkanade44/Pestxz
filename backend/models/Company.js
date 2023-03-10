@@ -6,7 +6,7 @@ const CompanySchema = new mongoose.Schema(
     companyAddress: { type: String, required: true },
     companyContact: { type: Number, required: true },
     companyEmail: { type: String, required: true },
-    gst: { type: String },
+    companyDetails: { CIN: String, License: String, GST: String },
   },
   { timestamps: true }
 );

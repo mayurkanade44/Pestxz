@@ -42,11 +42,9 @@ const RegisterClient = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await dispatch(
-        clientRegister({ shipToName, shipToAddress, shipToEmail, shipToNumber })
-      );
-    } catch (error) {}
+    dispatch(
+      clientRegister({ shipToName, shipToAddress, shipToEmail, shipToNumber })
+    );
   };
 
   return (

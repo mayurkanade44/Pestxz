@@ -1,10 +1,12 @@
 import Admin from "../models/Admin.js";
 
 export const addService = async (req, res) => {
-  const { serviceName, serviceOption, company } = req.body;
+  const { serviceName, serviceOption } = req.body;
   try {
     if (!serviceName || !serviceOption)
       return res.status(400).json({ msg: "Please provide all values" });
+
+    let company = req.user.company;
 
     const alreadyExists = await Admin.findOne({ serviceName, company });
     if (alreadyExists)
@@ -12,6 +14,7 @@ export const addService = async (req, res) => {
         .status(400)
         .json({ msg: `${serviceName} service already exists` });
 
+    req.body.company = company;
     const service = await Admin.create(req.body);
     return res
       .status(201)
