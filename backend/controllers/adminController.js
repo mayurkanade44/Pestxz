@@ -25,11 +25,30 @@ export const addService = async (req, res) => {
   }
 };
 
-export const getService = async (req, res) => {
-  const { company } = req.body;
+export const getCompanyServices = async (req, res) => {
   try {
-    const services = await Admin.find({ company });
+    const services = await Admin.find({ company: req.user.company }).select(
+      "serviceName serviceOption"
+    );
     return res.status(200).json({ services });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const editService = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const service = await Admin.findById(id);
+    if (!service) return res.status(404).json({ msg: "Service not found" });
+
+    await Admin.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    return res.status(200).json("Service has been updated");
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

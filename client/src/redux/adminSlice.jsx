@@ -12,6 +12,7 @@ const initialState = {
   location: "",
   singleClientDetails: {},
   singleClientLocations: [],
+  companyServices:[],
   redirect: false,
 };
 
@@ -47,6 +48,19 @@ export const addService = createAsyncThunk(
     try {
       const res = await authFetch.post("/admin/service", service);
       thunkAPI.dispatch(clearAdminValues());
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const getCompanyServices = createAsyncThunk(
+  "admin/companyServices",
+  async (_, thunkAPI) => {
+    try {
+      const res = await authFetch.get("/admin/service");
       return res.data;
     } catch (error) {
       console.log(error);
@@ -101,7 +115,11 @@ const adminSlice = createSlice({
       .addCase(addService.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
-      });
+      })
+      .addCase(getCompanyServices.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.companyServices = payload.services
+      })
   },
 });
 
