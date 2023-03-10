@@ -48,7 +48,7 @@ html {
   --red-dark: #842029;
   --green-light: #d1e7dd;
   --green-dark: #0f5132;
-  --green:#198754;
+  --green: #198754;
 
   /* fonts  */
   --headingFont: "Roboto Condensed", Sans-Serif;
@@ -194,6 +194,10 @@ ul {
 }
 .btn-danger:hover {
   background: var(--red-dark);
+  color: var(--white);
+}
+.btn-dark {
+  background: var(--black);
   color: var(--white);
 }
 /* alerts */
@@ -687,4 +691,12 @@ ul {
   .add-client .form-center button {
     margin-top: 0;
   }
+}
+
+.back {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  justify-content: space-between;
 }

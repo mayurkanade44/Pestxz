@@ -11,7 +11,7 @@ import {
   RegisterClient,
   Stats,
   SingleClient,
-  AddService,
+  Services,
 } from "./pages";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
           }
         >
           <Route index element={<Stats />} />
-          <Route path="add-service" element={<AddService />} />
+          <Route path="services" element={<Services />} />
           <Route path="add-client" element={<RegisterClient />} />
           <Route path="report" element={<Report />} />
           <Route path="client/:id" element={<SingleClient />} />

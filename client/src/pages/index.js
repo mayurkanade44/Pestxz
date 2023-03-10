@@ -1,9 +1,10 @@
-import AddService from "./AddService";
+import AddService from "../components/AddService";
 import Dashboard from "./Dashboard";
 import Error from "./Error";
 import Landing from "./Landing";
 import RegisterClient from "./RegisterClient";
 import Report from "./Report";
+import Services from "./Services";
 import SingleClient from "./SingleClient";
 import Stats from "./Stats";
 
@@ -16,4 +17,5 @@ export {
   Stats,
   SingleClient,
   AddService,
+  Services,
 };

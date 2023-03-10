@@ -12,8 +12,10 @@ const initialState = {
   location: "",
   singleClientDetails: {},
   singleClientLocations: [],
-  companyServices:[],
+  companyServices: [],
   redirect: false,
+  isEditing: false,
+  id: "",
 };
 
 export const clientRegister = createAsyncThunk(
@@ -69,6 +71,20 @@ export const getCompanyServices = createAsyncThunk(
   }
 );
 
+export const editService = createAsyncThunk(
+  "admin/editService",
+  async ({ serviceId, service }, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/admin/service/${serviceId}`, service);
+      thunkAPI.dispatch(clearAdminValues());
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -77,6 +93,9 @@ const adminSlice = createSlice({
       state[name] = value;
     },
     clearAdminValues: (state) => initialState,
+    setEdit: (state, { payload }) => {
+      return { ...state, isEditing: true, ...payload };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -116,13 +135,27 @@ const adminSlice = createSlice({
         state.adminLoading = false;
         toast.error(payload);
       })
+      .addCase(getCompanyServices.pending, (state, { payload }) => {
+        state.adminLoading = true;
+      })
       .addCase(getCompanyServices.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
-        state.companyServices = payload.services
+        state.companyServices = payload.services;
       })
+      .addCase(editService.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(editService.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(editService.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      });
   },
 });
 
-export const { handleAdmin, clearAdminValues } = adminSlice.actions;
+export const { handleAdmin, clearAdminValues, setEdit } = adminSlice.actions;
 
 export default adminSlice.reducer;

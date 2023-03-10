@@ -5,6 +5,8 @@ import SmallSidebar from "./SmallSidebar";
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import ProtectedRoute from "./ProtectedRoute";
+import AddLocation from "./AddLocation";
+import AddService from "./AddService";
 
 export {
   Navbar,
@@ -14,4 +16,6 @@ export {
   Logo,
   NavLinks,
   ProtectedRoute,
+  AddLocation,
+  AddService,
 };
