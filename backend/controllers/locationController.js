@@ -67,7 +67,7 @@ export const getSingleShipTo = async (req, res) => {
 
     const clientLocations = await Location.find({ shipTo: id }).select(
       "floor location"
-    );
+    ).sort("floor")
     return res.status(200).json({ clientDetails, clientLocations });
   } catch (error) {
     console.log(error);

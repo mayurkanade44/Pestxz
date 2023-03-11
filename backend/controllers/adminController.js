@@ -48,7 +48,7 @@ export const editService = async (req, res) => {
       runValidators: true,
     });
 
-    return res.status(200).json("Service has been updated");
+    return res.status(200).json({ msg: "Service has been updated" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
