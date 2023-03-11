@@ -85,6 +85,22 @@ export const editService = createAsyncThunk(
   }
 );
 
+export const addLocation = createAsyncThunk(
+  "admin/addLocation",
+  async ({ locationId, location }, thunkAPI) => {
+    try {
+      const res = await authFetch.post(
+        `/location/addLocation/${locationId}`,
+        location
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -150,6 +166,19 @@ const adminSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(editService.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(addLocation.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(addLocation.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.floor = "";
+        state.location = "";
+        toast.success(payload.msg);
+      })
+      .addCase(addLocation.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       });
