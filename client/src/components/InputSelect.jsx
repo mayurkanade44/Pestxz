@@ -14,8 +14,12 @@ const InputSelect = ({ labelText, name, value, handleChange, list, id }) => {
       >
         {list.map((item, index) => {
           return (
-            <option key={index} value={item}>
-              {item}
+            <option key={index} value={item._id ? item._id : item}>
+              {item._id
+                ? item.shipToName
+                  ? item.shipToName
+                  : item.serviceName
+                : item}
             </option>
           );
         })}

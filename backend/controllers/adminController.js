@@ -1,4 +1,5 @@
 import Admin from "../models/Admin.js";
+import ShipTo from "../models/ShipTo.js";
 
 export const addService = async (req, res) => {
   const { serviceName, serviceOption } = req.body;
@@ -30,7 +31,8 @@ export const getCompanyServices = async (req, res) => {
     const services = await Admin.find({ company: req.user.company }).select(
       "serviceName serviceOption"
     );
-    return res.status(200).json({ services });
+    const allShipTo = await ShipTo.find({ company: req.user.company });
+    return res.status(200).json({ services, allShipTo });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

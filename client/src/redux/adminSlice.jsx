@@ -10,6 +10,7 @@ const initialState = {
   shipToNumber: "",
   floor: "",
   location: "",
+  allClients: [],
   singleClientDetails: {},
   singleClientLocations: [],
   singleLocation: {},
@@ -23,7 +24,7 @@ export const clientRegister = createAsyncThunk(
   "admin/clientRegister",
   async (form, thunkAPI) => {
     try {
-      const res = await authFetch.post("/shipTo/addShipTo", form);
+      const res = await authFetch.post("/shipTo/client", form);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -132,6 +133,21 @@ export const addLocationRecord = createAsyncThunk(
   }
 );
 
+export const createReport = createAsyncThunk(
+  "user/createReport",
+  async ({ shipToName, shipToAddress, shipToEmail }, thunkAPI) => {
+    try {
+      const res = await authFetch.get(
+        `/report/allReports?shipTo=${shipToName}&serviceId=${shipToEmail}`
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -187,6 +203,7 @@ const adminSlice = createSlice({
       })
       .addCase(getCompanyServices.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
+        state.allClients = payload.allShipTo;
         state.companyServices = payload.services;
       })
       .addCase(editService.pending, (state) => {
@@ -233,6 +250,17 @@ const adminSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(addLocationRecord.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(createReport.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(createReport.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(createReport.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       });

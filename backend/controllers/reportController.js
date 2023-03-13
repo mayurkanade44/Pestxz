@@ -28,7 +28,7 @@ export const addRecord = async (req, res) => {
   }
 };
 
-export const getServiceReport = async (req, res) => {
+export const generateServiceReport = async (req, res) => {
   const { shipTo, serviceId, location, floor } = req.query;
   try {
     if (!shipTo)
@@ -109,7 +109,7 @@ export const getServiceReport = async (req, res) => {
     const data = await Report.aggregate(query);
 
     if (data.length === 0)
-      return res.status(200).json({ msg: "Selected data not found" });
+      return res.status(400).json({ msg: "No data not found on selected fields" });
 
     const workbook = new exceljs.Workbook();
     let worksheet = workbook.addWorksheet("Sheet1");
