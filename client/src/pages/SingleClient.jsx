@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AddLocation } from "../components";
 import { singleClient } from "../redux/adminSlice";
+import { saveAs } from "file-saver";
 
 const SingleClient = () => {
   const { id } = useParams();
@@ -16,6 +17,10 @@ const SingleClient = () => {
 
     // eslint-disable-next-line
   }, [open]);
+
+  const downloadImage = (url, name) => {
+    saveAs(url, `${name}.jpg`); // Put your image url here.
+  };
 
   return (
     <div className="row">
@@ -56,7 +61,10 @@ const SingleClient = () => {
                     <td>{item.floor}</td>
                     <td>{item.location}</td>
                     <td>
-                      <button className="btn btn-sm btn-success">
+                      <button
+                        className="btn btn-sm btn-success"
+                        onClick={() => downloadImage(item.qr, item.location)}
+                      >
                         Download
                       </button>
                     </td>

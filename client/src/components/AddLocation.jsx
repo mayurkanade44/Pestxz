@@ -8,7 +8,7 @@ import {
 import { InputRow } from ".";
 import { capitalLetter } from "../utils/data";
 
-const AddLocation = ({ id, }) => {
+const AddLocation = ({ id }) => {
   const dispatch = useDispatch();
   const { adminLoading, companyServices, floor, location, isEditing } =
     useSelector((store) => store.admin);
@@ -37,7 +37,10 @@ const AddLocation = ({ id, }) => {
 
     let services = addServices.services;
     dispatch(
-      addLocation({ locationId: id, location: { floor:capitalLetter(floor), location, services } })
+      addLocation({
+        locationId: id,
+        location: { floor: capitalLetter(floor), location, services },
+      })
     );
   };
 
