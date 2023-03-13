@@ -5,6 +5,7 @@ const LocationSchema = new mongoose.Schema(
     floor: { type: String, required: true },
     location: { type: String, required: true },
     count: { type: Number },
+    qr: { type: String },
     services: [
       {
         type: mongoose.Types.ObjectId,
