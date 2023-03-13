@@ -7,6 +7,7 @@ import NavLinks from "./NavLinks";
 import ProtectedRoute from "./ProtectedRoute";
 import AddLocation from "./AddLocation";
 import AddService from "./AddService";
+import InputSelect from "./InputSelect";
 
 export {
   Navbar,
@@ -18,4 +19,5 @@ export {
   ProtectedRoute,
   AddLocation,
   AddService,
+  InputSelect,
 };

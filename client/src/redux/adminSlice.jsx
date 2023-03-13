@@ -12,6 +12,7 @@ const initialState = {
   location: "",
   singleClientDetails: {},
   singleClientLocations: [],
+  singleLocation: {},
   companyServices: [],
   redirect: false,
   isEditing: false,
@@ -101,6 +102,36 @@ export const addLocation = createAsyncThunk(
   }
 );
 
+export const getLocation = createAsyncThunk(
+  "user/getLocation",
+  async (locationId, thunkAPI) => {
+    try {
+      const res = await authFetch.get(
+        `/location/locationServices/${locationId}`
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const addLocationRecord = createAsyncThunk(
+  "user/addLocationRecord",
+  async ({ id, reportData }, thunkAPI) => {
+    try {
+      const res = await authFetch.post(`/report/addRecord/${id}`, {
+        reportData,
+      });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const adminSlice = createSlice({
   name: "admin",
   initialState,
@@ -179,6 +210,29 @@ const adminSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(addLocation.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(getLocation.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(getLocation.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.singleLocation = payload.location;
+        toast.success(payload.msg);
+      })
+      .addCase(getLocation.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(addLocationRecord.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(addLocationRecord.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(addLocationRecord.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       });

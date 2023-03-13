@@ -12,6 +12,7 @@ import {
   Stats,
   SingleClient,
   Services,
+  QRLocation,
 } from "./pages";
 
 function App() {
@@ -34,6 +35,14 @@ function App() {
           <Route path="report" element={<Report />} />
           <Route path="client/:id" element={<SingleClient />} />
         </Route>
+        <Route
+          path="/qr-location/:id"
+          element={
+            <ProtectedRoute>
+              <QRLocation />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Error />} />
       </Routes>
     </Router>

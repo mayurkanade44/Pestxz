@@ -26,8 +26,10 @@ const AddLocation = ({ id }) => {
   }, []);
 
   useEffect(() => {
-    setAllServices(companyServices);
-    setAddServices({ name: [], services: [] });
+    if (!adminLoading) {
+      setAllServices(companyServices);
+      setAddServices({ name: [], services: [] });
+    }
 
     // eslint-disable-next-line
   }, [adminLoading]);
