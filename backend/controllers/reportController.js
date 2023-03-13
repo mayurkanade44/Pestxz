@@ -18,6 +18,7 @@ export const addRecord = async (req, res) => {
 
     req.body.shipTo = locationExists.shipTo;
     req.body.location = id;
+    req.body.user = req.user.userId
 
     await Report.create(req.body);
     return res.status(201).json({ msg: "Record has been saved" });
@@ -115,6 +116,7 @@ export const getServiceReport = async (req, res) => {
 
     worksheet.columns = [
       { header: "Premises", key: "shipTo" },
+      { header: "Date/Time", key: "time" },
       { header: "Floor", key: "floor" },
       { header: "Location", key: "location" },
       { header: "Service", key: "service" },
@@ -124,6 +126,7 @@ export const getServiceReport = async (req, res) => {
     data.map((item) => {
       worksheet.addRow({
         shipTo: item.shipTo,
+        time: item.createdAt.toString().split("T")[0],
         floor: item.floor,
         location: item.location,
         service: item.services.serviceName,
@@ -138,9 +141,9 @@ export const getServiceReport = async (req, res) => {
     //   worksheet.addRow({ name: item.shipTo, floor: item.floor })
     // );
 
-    await workbook.xlsx.writeFile(`${data.shipTo}.xlsx`);
+    await workbook.xlsx.writeFile(`${data[0].shipTo}.xlsx`);
 
-    return res.status(200).json({ data });
+    return res.status(200).json({ msg: "Report has been generated.", data });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
