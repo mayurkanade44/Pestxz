@@ -8,6 +8,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AddLocation from "./AddLocation";
 import AddService from "./AddService";
 import InputSelect from "./InputSelect";
+import AddUser from "./AddUser";
 
 export {
   Navbar,
@@ -20,4 +21,5 @@ export {
   AddLocation,
   AddService,
   InputSelect,
+  AddUser,
 };

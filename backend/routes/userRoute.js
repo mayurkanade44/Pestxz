@@ -12,7 +12,7 @@ import { authenticateUser, authorizeUser } from "../middleware/auth.js";
 router.route("/login").post(loginUser);
 router
   .route("/register")
-  .post(registerUser);
+  .post(authenticateUser, authorizeUser("Admin"), registerUser);
 router
   .route("/allUser")
   .get(authenticateUser, authorizeUser("Admin"), allUsers);

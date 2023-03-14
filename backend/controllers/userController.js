@@ -6,7 +6,10 @@ export const registerUser = async (req, res) => {
     if (!name || !password || !email || !role)
       return res.status(400).json({ msg: "Please provide all values" });
 
-    const alreadyUser = await User.findOne({ email });
+    const alreadyUser = await User.findOne({
+      email,
+      company: req.user.company,
+    });
     if (alreadyUser)
       return res.status(400).json({ msg: "Email id already exists" });
 

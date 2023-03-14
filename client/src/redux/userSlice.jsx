@@ -39,6 +39,20 @@ export const getAllUsers = createAsyncThunk(
   }
 );
 
+export const registerUser = createAsyncThunk(
+  "user/register",
+  async (user, thunkAPI) => {
+    try {
+      const res = await authFetch.post("/user/register", user);
+      thunkAPI.dispatch(clearUserValues());
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -49,6 +63,7 @@ const userSlice = createSlice({
     handleUser: (state, { payload: { name, value } }) => {
       state[name] = value;
     },
+    clearUserValues: (state) => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -59,6 +74,8 @@ const userSlice = createSlice({
         state.userLoading = false;
         state.user = payload.user;
         localStorage.setItem("user", JSON.stringify(payload.user));
+        state.name = "";
+        state.password = "";
         toast.success(payload.msg);
       })
       .addCase(loginUser.rejected, (state, { payload }) => {
@@ -71,10 +88,26 @@ const userSlice = createSlice({
       .addCase(getAllUsers.fulfilled, (state, { payload }) => {
         state.userLoading = false;
         state.allUsers = payload.users;
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(registerUser.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.allUsers = payload.users;
+        state.name = "";
+        state.password = "";
+        state.email = "";
+        state.role = "";
+        toast.success(payload.msg);
+      })
+      .addCase(registerUser.rejected, (state, { payload }) => {
+        state.userLoading = false;
+        toast.error(payload);
       });
   },
 });
 
-export const { toggleSidebar, handleUser } = userSlice.actions;
+export const { toggleSidebar, handleUser, clearUserValues } = userSlice.actions;
 
 export default userSlice.reducer;
