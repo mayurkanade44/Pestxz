@@ -2,6 +2,8 @@ import Report from "../models/Report.js";
 import Location from "../models/Location.js";
 import mongoose from "mongoose";
 import exceljs from "exceljs";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
 export const addRecord = async (req, res) => {
   const { reportData } = req.body;
@@ -18,7 +20,7 @@ export const addRecord = async (req, res) => {
 
     req.body.shipTo = locationExists.shipTo;
     req.body.location = id;
-    req.body.user = req.user.userId
+    req.body.user = req.user.userId;
 
     await Report.create(req.body);
     return res.status(201).json({ msg: "Record has been saved" });
@@ -29,10 +31,13 @@ export const addRecord = async (req, res) => {
 };
 
 export const generateServiceReport = async (req, res) => {
-  const { shipTo, serviceId, location, floor } = req.query;
+  const { shipTo, fromDate, toDate, serviceId, location, floor } = req.query;
   try {
     if (!shipTo)
       return res.status(400).json({ msg: "Please select premises." });
+
+    let endDate = new Date(toDate);
+    endDate.setDate(endDate.getDate() + 1);
 
     const query = [
       {
@@ -62,6 +67,14 @@ export const generateServiceReport = async (req, res) => {
       },
       {
         $unwind: "$location",
+      },
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(fromDate),
+            $lte: endDate,
+          },
+        },
       },
     ];
 
@@ -109,7 +122,9 @@ export const generateServiceReport = async (req, res) => {
     const data = await Report.aggregate(query);
 
     if (data.length === 0)
-      return res.status(400).json({ msg: "No data not found on selected fields" });
+      return res
+        .status(400)
+        .json({ msg: "No data not found on selected fields" });
 
     const workbook = new exceljs.Workbook();
     let worksheet = workbook.addWorksheet("Sheet1");
@@ -124,9 +139,10 @@ export const generateServiceReport = async (req, res) => {
     ];
 
     data.map((item) => {
+      console.log(item.createdAt.toString());
       worksheet.addRow({
         shipTo: item.shipTo,
-        time: item.createdAt.toString().split("T")[0],
+        time: item.createdAt.toString(),
         floor: item.floor,
         location: item.location,
         service: item.services.serviceName,
@@ -141,9 +157,22 @@ export const generateServiceReport = async (req, res) => {
     //   worksheet.addRow({ name: item.shipTo, floor: item.floor })
     // );
 
-    await workbook.xlsx.writeFile(`${data[0].shipTo}.xlsx`);
+    await workbook.xlsx.writeFile(`./files/${data[0].shipTo}.xlsx`);
 
-    return res.status(200).json({ msg: "Report has been generated.", data });
+    const result = await cloudinary.uploader.upload(
+      `files/${data[0].shipTo}.xlsx`,
+      {
+        resource_type: "raw",
+        use_filename: true,
+        folder: "service-cards",
+      }
+    );
+
+    fs.unlinkSync(`./files/${data[0].shipTo}.xlsx`);
+
+    return res
+      .status(200)
+      .json({ msg: "Report has been generated.", link: result.secure_url });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
