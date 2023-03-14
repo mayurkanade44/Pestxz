@@ -255,6 +255,7 @@ const adminSlice = createSlice({
       })
       .addCase(createReport.pending, (state) => {
         state.adminLoading = true;
+        state.id = "";
       })
       .addCase(createReport.fulfilled, (state, { payload }) => {
         state.adminLoading = false;

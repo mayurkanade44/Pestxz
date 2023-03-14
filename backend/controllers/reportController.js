@@ -69,6 +69,17 @@ export const generateServiceReport = async (req, res) => {
         $unwind: "$location",
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
         $match: {
           createdAt: {
             $gte: new Date(fromDate),
@@ -107,6 +118,7 @@ export const generateServiceReport = async (req, res) => {
         floor: "$location.floor",
         location: "$location.location",
         services: "$reportData",
+        user: "$user",
         createdAt: 1,
       },
     });
@@ -136,10 +148,10 @@ export const generateServiceReport = async (req, res) => {
       { header: "Location", key: "location" },
       { header: "Service", key: "service" },
       { header: "Activity", key: "activity" },
+      { header: "Serviced By", key: "user" },
     ];
 
     data.map((item) => {
-      console.log(item.createdAt.toString());
       worksheet.addRow({
         shipTo: item.shipTo,
         time: item.createdAt.toString(),
@@ -147,6 +159,7 @@ export const generateServiceReport = async (req, res) => {
         location: item.location,
         service: item.services.serviceName,
         activity: item.services.action,
+        user:item.user.name
       });
     });
 

@@ -5,7 +5,6 @@ import { InputRow, InputSelect } from "../components";
 import {
   createReport,
   getCompanyServices,
-  handleAdmin,
   singleClient,
 } from "../redux/adminSlice";
 
