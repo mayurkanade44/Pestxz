@@ -135,10 +135,10 @@ export const addLocationRecord = createAsyncThunk(
 
 export const createReport = createAsyncThunk(
   "user/createReport",
-  async ({ shipToName, shipToAddress, shipToEmail }, thunkAPI) => {
+  async ({ client, fromDate, toDate, subLocation, service }, thunkAPI) => {
     try {
       const res = await authFetch.get(
-        `/report/allReports?shipTo=${shipToName}&serviceId=${shipToEmail}`
+        `/report/allReports?shipTo=${client}&fromDate=${fromDate}&toDate=${toDate}&serviceId=${service}`
       );
       return res.data;
     } catch (error) {
@@ -258,6 +258,7 @@ const adminSlice = createSlice({
       })
       .addCase(createReport.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
+        state.id = payload.link;
         toast.success(payload.msg);
       })
       .addCase(createReport.rejected, (state, { payload }) => {

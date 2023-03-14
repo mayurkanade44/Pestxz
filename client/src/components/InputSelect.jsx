@@ -10,7 +10,6 @@ const InputSelect = ({ labelText, name, value, handleChange, list, id }) => {
         value={value}
         onChange={handleChange}
         className="form-select"
-        
       >
         {list.map((item, index) => {
           return (

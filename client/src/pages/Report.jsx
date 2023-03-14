@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { InputSelect } from "../components";
+import { toast } from "react-toastify";
+import { InputRow, InputSelect } from "../components";
 import {
   createReport,
   getCompanyServices,
@@ -10,23 +11,32 @@ import {
 
 const Report = () => {
   const [location, setLocation] = useState([]);
+  const [reportField, setReportField] = useState({
+    client: "",
+    subLocation: "",
+    service: "",
+    fromDate: "",
+    toDate: "",
+    user: "",
+  });
+  const { client, subLocation, service, fromDate, toDate, user } = reportField;
+
   const dispatch = useDispatch();
   const {
+    adminLoading,
     allClients,
     companyServices,
-    shipToName,
-    shipToAddress,
-    shipToEmail,
     singleClientLocations,
+    id,
   } = useSelector((store) => store.admin);
 
   useEffect(() => {
     dispatch(getCompanyServices());
 
-    if (shipToName && shipToName !== "Select") {
-      dispatch(singleClient(shipToName));
+    if (client && client !== "Select") {
+      dispatch(singleClient(client));
     }
-  }, [shipToName]);
+  }, [client]);
 
   useEffect(() => {
     singleClientLocations.map((item) =>
@@ -39,14 +49,14 @@ const Report = () => {
 
   const handleSearch = (e) => {
     const { name, value } = e.target;
-
-    dispatch(handleAdmin({ name, value }));
+    setReportField({ ...reportField, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(createReport({ shipToName, shipToAddress, shipToEmail }));
+    if (!client || !fromDate || !toDate)
+      return toast.error("Please select all required fields");
+    dispatch(createReport({ client, subLocation, service, fromDate, toDate }));
   };
 
   return (
@@ -58,33 +68,61 @@ const Report = () => {
 
           {/* search by status */}
           <InputSelect
-            labelText="Client Name"
-            name="shipToName"
-            value={shipToName}
+            labelText="Client Name*"
+            name="client"
+            value={client}
             handleChange={handleSearch}
             list={["Select", ...allClients]}
           />
-
+          <InputRow
+            type="date"
+            labelText="From Date*"
+            name="fromDate"
+            value={fromDate}
+            handleChange={handleSearch}
+          />
+          <InputRow
+            type="date"
+            labelText="To Date*"
+            name="toDate"
+            value={toDate}
+            handleChange={handleSearch}
+          />
           {/* search by type*/}
           <InputSelect
             labelText="Floor / Location"
-            name="shipToAddress"
-            value={shipToAddress}
+            name="subLocation"
+            value={subLocation}
             handleChange={handleSearch}
-            list={["all", ...location]}
+            list={["All", ...location]}
           />
-
           <InputSelect
             labelText="Service"
-            name="shipToEmail"
-            value={shipToEmail}
+            name="service"
+            value={service}
             handleChange={handleSearch}
-            list={["all", ...companyServices]}
+            list={["All", ...companyServices]}
           />
-
-          <button className="btn btn-block mt-3" onClick={handleSubmit}>
-            Generate Report
+          <InputSelect
+            labelText="User"
+            name="user"
+            value={user}
+            handleChange={handleSearch}
+            list={["All", ...companyServices]}
+          />
+          <button className="btn btn-primary mt-3" onClick={handleSubmit}>
+            {adminLoading ? "Generating..." : "Generate Report"}
           </button>
+          {id && (
+            <button
+              className="btn btn-success mt-3"
+              disabled={id ? false : true}
+            >
+              <a href={id} style={{ textDecoration: "none", color: "white" }}>
+                Download Report
+              </a>
+            </button>
+          )}
         </div>
       </form>
     </div>
