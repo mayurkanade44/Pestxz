@@ -10,6 +10,7 @@ const initialState = {
   password: "",
   name: "",
   role: "",
+  allUsers: [],
 };
 
 export const loginUser = createAsyncThunk(
@@ -17,6 +18,19 @@ export const loginUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const res = await authFetch.post("/user/login", user);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const getAllUsers = createAsyncThunk(
+  "user/allUsers",
+  async (_, thunkAPI) => {
+    try {
+      const res = await authFetch.get("/user/allUser");
       return res.data;
     } catch (error) {
       console.log(error);
@@ -50,6 +64,13 @@ const userSlice = createSlice({
       .addCase(loginUser.rejected, (state, { payload }) => {
         state.userLoading = false;
         toast.error(payload);
+      })
+      .addCase(getAllUsers.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.allUsers = payload.users;
       });
   },
 });

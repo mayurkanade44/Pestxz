@@ -13,6 +13,7 @@ import {
   SingleClient,
   Services,
   QRLocation,
+  Profile,
 } from "./pages";
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
           <Route path="services" element={<Services />} />
           <Route path="add-client" element={<RegisterClient />} />
           <Route path="report" element={<Report />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="client/:id" element={<SingleClient />} />
         </Route>
         <Route

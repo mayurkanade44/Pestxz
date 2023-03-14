@@ -10,7 +10,7 @@ export const registerUser = async (req, res) => {
     if (alreadyUser)
       return res.status(400).json({ msg: "Email id already exists" });
 
-    req.body.company = "6409835e99a177f2b2fdf1f8";
+    req.body.company = req.user.company;
 
     const user = await User.create(req.body);
     const users = await User.find().select("-password");
@@ -54,7 +54,12 @@ export const loginUser = async (req, res) => {
 
 export const allUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find({ company: req.user.company })
+      .select("-password")
+      .populate({
+        path: "company",
+        select: "companyName companyAddress companyContact companyEmail",
+      });
     res.status(200).json({ users });
   } catch (error) {
     console.log(error);
