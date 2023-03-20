@@ -36,8 +36,8 @@ export const addLocation = async (req, res) => {
       folder: "service-cards",
     });
 
-    loc.qr = result.secure_url
-    await loc.save()
+    loc.qr = result.secure_url;
+    await loc.save();
 
     fs.unlinkSync("./files/image.jpeg");
 
@@ -69,13 +69,14 @@ export const getLocationServices = async (req, res) => {
 
 export const editLocation = async (req, res) => {
   const { id } = req.params;
-  const { services } = req.body;
   try {
-    const location = await Location.findById(id);
-    if (!location) return res.status(404).json({ msg: "No location found" });
+    const loc = await Location.findById(id);
+    if (!loc) return res.status(404).json({ msg: "No location found" });
 
-    location.services = services;
-    await location.save();
+    await Location.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     return res.status(200).json({ msg: "Successfully updated" });
   } catch (error) {
@@ -92,7 +93,10 @@ export const getSingleShipTo = async (req, res) => {
       return res.status(404).json({ msg: "Client details not found" });
 
     const clientLocations = await Location.find({ shipTo: id })
-      .select("floor location qr")
+      .populate({
+        path: "services",
+        select: "serviceName",
+      })
       .sort("floor");
     return res.status(200).json({ clientDetails, clientLocations });
   } catch (error) {

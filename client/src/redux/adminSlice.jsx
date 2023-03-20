@@ -227,6 +227,7 @@ const adminSlice = createSlice({
       })
       .addCase(editService.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
+        state.isEditing = false;
         toast.success(payload.msg);
       })
       .addCase(editService.rejected, (state, { payload }) => {
@@ -243,6 +244,20 @@ const adminSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(addLocation.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(editLocation.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(editLocation.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.isEditing = false;
+        state.floor = "";
+        state.location = "";
+        toast.success(payload.msg);
+      })
+      .addCase(editLocation.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       })

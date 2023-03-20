@@ -205,7 +205,10 @@ ul {
   background: var(--blue);
   color: var(--white);
 }
-
+.btn-primary:hover {
+  background: var(--blue);
+  color: var(--white);
+}
 /* alerts */
 .alert {
   padding: 0.375rem 0.75rem;

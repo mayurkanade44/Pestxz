@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addLocation,
+  editLocation,
   getCompanyServices,
   handleAdmin,
 } from "../redux/adminSlice";
 import { InputRow } from ".";
 import { capitalLetter } from "../utils/data";
+import { toast } from "react-toastify";
 
-const AddLocation = ({ id }) => {
+const AddLocation = ({ locationId, alreadyService }) => {
   const dispatch = useDispatch();
-  const { adminLoading, companyServices, floor, location, isEditing } =
+  const { adminLoading, companyServices, floor, location, isEditing, id } =
     useSelector((store) => store.admin);
 
   const [allServices, setAllServices] = useState(null);
@@ -20,27 +22,60 @@ const AddLocation = ({ id }) => {
   });
 
   useEffect(() => {
-    if (!location) dispatch(getCompanyServices());
+    if (!location || isEditing) dispatch(getCompanyServices());
 
     // eslint-disable-next-line
-  }, []);
+  }, [isEditing]);
 
   useEffect(() => {
     if (!adminLoading) {
       setAllServices(companyServices);
+    }
+    if(!location) {
       setAddServices({ name: [], services: [] });
     }
 
     // eslint-disable-next-line
   }, [adminLoading]);
 
+  useEffect(() => {
+    if (alreadyService) {
+      for (let item of alreadyService) {
+        setAddServices((prev) => ({
+          ...prev,
+          name: [...prev.name, item],
+          services: [...prev.services, item._id],
+        }));
+        setAllServices((allServices) =>
+          allServices.filter((it) => it._id !== item._id)
+        );
+      }
+    }
+  }, [isEditing]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     let services = addServices.services;
+
+    if (!location || !floor || services.length < 1) {
+      toast.error("Please fill all the details");
+      return;
+    }
+
+    if (isEditing) {
+      dispatch(
+        editLocation({
+          locationId: id,
+          location: { floor: capitalLetter(floor), location, services },
+        })
+      );
+      return;
+    }
+
     dispatch(
       addLocation({
-        locationId: id,
+        locationId,
         location: { floor: capitalLetter(floor), location, services },
       })
     );
@@ -50,11 +85,15 @@ const AddLocation = ({ id }) => {
     setAllServices((allServices) =>
       allServices.filter((item) => item._id !== ser._id)
     );
-    setAddServices((prev) => ({
-      ...prev,
-      name: [...prev.name, ser],
-      services: [...prev.services, ser._id],
-    }));
+
+    const itemExists = addServices.name.some((item) => item._id === ser._id);
+    if (!itemExists) {
+      setAddServices((prev) => ({
+        ...prev,
+        name: [...prev.name, ser],
+        services: [...prev.services, ser._id],
+      }));
+    }
   };
 
   const removeService = (ser) => {
@@ -64,7 +103,8 @@ const AddLocation = ({ id }) => {
       services: prev.services.filter((item) => item !== ser._id),
     }));
 
-    setAllServices((allServices) => [...allServices, ser]);
+    const itemExists = allServices.some((item) => item._id === ser._id);
+    if (!itemExists) setAllServices((allServices) => [...allServices, ser]);
   };
 
   const handleLocationInput = (e) => {
@@ -75,7 +115,7 @@ const AddLocation = ({ id }) => {
   };
 
   return (
-    <div className="add-client">
+    <div className="add-client mb-3">
       {allServices && (
         <>
           <span className="service-span">Available Services :</span>
@@ -141,7 +181,7 @@ const AddLocation = ({ id }) => {
               onClick={handleSubmit}
               disabled={adminLoading}
             >
-              Add Location
+              {isEditing ? "Save" : "Add Location"}
             </button>
           </div>
         </div>
