@@ -22,6 +22,21 @@ export const addLocationRecord = createAsyncThunk(
   }
 );
 
+export const createReport = createAsyncThunk(
+  "user/createReport",
+  async ({ client, fromDate, toDate, subLocation, service }, thunkAPI) => {
+    try {
+      const res = await authFetch.get(
+        `/report/allReports?shipTo=${client}&fromDate=${fromDate}&toDate=${toDate}&serviceId=${service}`
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const reportSlice = createSlice({
   name: "report",
   initialState,
@@ -36,6 +51,19 @@ const reportSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(addLocationRecord.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(createReport.pending, (state) => {
+        state.reportLoading = true;
+        state.download = "";
+      })
+      .addCase(createReport.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        state.download = payload.link;
+        toast.success(payload.msg);
+      })
+      .addCase(createReport.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       });

@@ -2,11 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { InputRow, InputSelect } from "../components";
-import {
-  createReport,
-  getCompanyServices,
-  singleClient,
-} from "../redux/adminSlice";
+import { getCompanyServices, singleClient } from "../redux/adminSlice";
+import { createReport } from "../redux/reportSlice";
 
 const Report = () => {
   const [location, setLocation] = useState([]);
@@ -28,6 +25,7 @@ const Report = () => {
     singleClientLocations,
     locationId,
   } = useSelector((store) => store.admin);
+  const { reportLoading, download } = useSelector((store) => store.report);
 
   useEffect(() => {
     dispatch(getCompanyServices());
@@ -109,16 +107,16 @@ const Report = () => {
             handleChange={handleSearch}
             list={["All", ...companyServices]}
           />
-          <button className="btn btn-primary mt-3" onClick={handleSubmit}>
-            {adminLoading ? "Generating..." : "Generate Report"}
+          <button className="btn btn-primary mt-3" onClick={handleSubmit} disabled={reportLoading}>
+            {reportLoading ? "Creating Report..." : "Generate Report"}
           </button>
-          {locationId && (
+          {download && (
             <button
               className="btn btn-success mt-3"
-              disabled={locationId ? false : true}
+              disabled={download ? false : true}
             >
               <a
-                href={locationId}
+                href={download}
                 style={{ textDecoration: "none", color: "white" }}
               >
                 Download Report
