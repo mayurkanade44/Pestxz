@@ -135,9 +135,6 @@ const AddLocation = ({ clientId, alreadyService }) => {
                 onClick={() => addService(item)}
               >
                 {item.serviceName}
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  +
-                </span>
               </button>
             );
           })}
@@ -168,14 +165,11 @@ const AddLocation = ({ clientId, alreadyService }) => {
             return (
               <button
                 type="button"
-                className="btn btn-sm btn-success position-relative me-3 mb-1"
+                className="btn btn-sm btn-success me-3 mb-1"
                 key={item._id}
                 onClick={() => removeService(item)}
               >
                 {item.serviceName}
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  +
-                </span>
               </button>
             );
           })}

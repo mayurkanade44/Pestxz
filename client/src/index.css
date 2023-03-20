@@ -743,3 +743,7 @@ ul {
   padding: 0px 2.5rem;
   margin: 5px;
 }
+
+.hr {
+  border-top: 2px dashed var(--green)
+}
