@@ -15,9 +15,9 @@ const initialState = {
   singleClientLocations: [],
   singleLocation: {},
   companyServices: [],
-  redirect: false,
   isEditing: false,
-  id: "",
+  clientId: "",
+  locationId: "",
 };
 
 export const clientRegister = createAsyncThunk(
@@ -89,12 +89,13 @@ export const editService = createAsyncThunk(
 
 export const addLocation = createAsyncThunk(
   "admin/addLocation",
-  async ({ locationId, location }, thunkAPI) => {
+  async ({ clientId, location }, thunkAPI) => {
     try {
       const res = await authFetch.post(
-        `/location/addLocation/${locationId}`,
+        `/location/addLocation/${clientId}`,
         location
       );
+      thunkAPI.dispatch(singleClient(clientId));
       return res.data;
     } catch (error) {
       console.log(error);
@@ -120,12 +121,13 @@ export const getLocation = createAsyncThunk(
 
 export const editLocation = createAsyncThunk(
   "admin/editLocation",
-  async ({ locationId, location }, thunkAPI) => {
+  async ({ clientId, locationId, location }, thunkAPI) => {
     try {
       const res = await authFetch.patch(
         `/location/locationServices/${locationId}`,
         location
       );
+      thunkAPI.dispatch(singleClient(clientId));
       return res.data;
     } catch (error) {
       console.log(error);
@@ -183,8 +185,12 @@ const adminSlice = createSlice({
       })
       .addCase(clientRegister.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
-        state.floor = payload.id;
+        state.clientId = payload.id;
         state.redirect = true;
+        state.shipToName = "";
+        state.shipToAddress = "";
+        state.shipToEmail = "";
+        state.shipToNumber = "";
         toast.success(payload.msg);
       })
       .addCase(clientRegister.rejected, (state, { payload }) => {
@@ -286,11 +292,11 @@ const adminSlice = createSlice({
       })
       .addCase(createReport.pending, (state) => {
         state.adminLoading = true;
-        state.id = "";
+        state.locationId = "";
       })
       .addCase(createReport.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
-        state.id = payload.link;
+        state.locationId = payload.link;
         toast.success(payload.msg);
       })
       .addCase(createReport.rejected, (state, { payload }) => {

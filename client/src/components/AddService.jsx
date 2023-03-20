@@ -28,20 +28,25 @@ const AddService = ({
       return;
     }
 
-    let serviceName = capitalLetter(shipToName),
-      serviceOption = capitalLetter(shipToAddress.split(","));
-
     if (isEditing) {
       dispatch(
         editService({
           serviceId: id,
-          service: { serviceName, serviceOption },
+          service: {
+            serviceName: capitalLetter(shipToName),
+            serviceOption: capitalLetter(shipToAddress.split(",")),
+          },
         })
       );
       return;
     }
 
-    dispatch(addService({ serviceName, serviceOption }));
+    dispatch(
+      addService({
+        serviceName: capitalLetter(shipToName),
+        serviceOption: capitalLetter(shipToAddress.split(",")),
+      })
+    );
   };
 
   return (
@@ -66,7 +71,7 @@ const AddService = ({
           />
           <InputRow
             type="text"
-            labelText="Service Options"
+            labelText="Application Options"
             placeholder="options must be separated by comma"
             name="shipToAddress"
             value={shipToAddress}

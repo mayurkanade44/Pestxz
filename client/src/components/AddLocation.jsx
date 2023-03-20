@@ -10,10 +10,16 @@ import { InputRow } from ".";
 import { capitalLetter } from "../utils/data";
 import { toast } from "react-toastify";
 
-const AddLocation = ({ locationId, alreadyService }) => {
+const AddLocation = ({ clientId, alreadyService }) => {
   const dispatch = useDispatch();
-  const { adminLoading, companyServices, floor, location, isEditing, id } =
-    useSelector((store) => store.admin);
+  const {
+    adminLoading,
+    companyServices,
+    floor,
+    location,
+    isEditing,
+    locationId,
+  } = useSelector((store) => store.admin);
 
   const [allServices, setAllServices] = useState(null);
   const [addServices, setAddServices] = useState({
@@ -31,7 +37,7 @@ const AddLocation = ({ locationId, alreadyService }) => {
     if (!adminLoading) {
       setAllServices(companyServices);
     }
-    if(!location) {
+    if (!location) {
       setAddServices({ name: [], services: [] });
     }
 
@@ -66,7 +72,8 @@ const AddLocation = ({ locationId, alreadyService }) => {
     if (isEditing) {
       dispatch(
         editLocation({
-          locationId: id,
+          clientId,
+          locationId,
           location: { floor: capitalLetter(floor), location, services },
         })
       );
@@ -75,7 +82,7 @@ const AddLocation = ({ locationId, alreadyService }) => {
 
     dispatch(
       addLocation({
-        locationId,
+        clientId,
         location: { floor: capitalLetter(floor), location, services },
       })
     );
@@ -123,7 +130,7 @@ const AddLocation = ({ locationId, alreadyService }) => {
             return (
               <button
                 type="button"
-                className="btn btn-sm position-relative ms-3"
+                className="btn btn-sm ms-3"
                 key={item._id}
                 onClick={() => addService(item)}
               >
@@ -181,7 +188,7 @@ const AddLocation = ({ locationId, alreadyService }) => {
               onClick={handleSubmit}
               disabled={adminLoading}
             >
-              {isEditing ? "Save" : "Add Location"}
+              {adminLoading ? "saving..." : isEditing ? "Save" : "Add Location"}
             </button>
           </div>
         </div>

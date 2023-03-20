@@ -2,11 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { InputRow } from "../components";
-import {
-  clearAdminValues,
-  clientRegister,
-  handleAdmin,
-} from "../redux/adminSlice";
+import { clientRegister, handleAdmin } from "../redux/adminSlice";
 
 const RegisterClient = () => {
   const {
@@ -15,24 +11,20 @@ const RegisterClient = () => {
     shipToEmail,
     shipToNumber,
     adminLoading,
-    floor,
-    redirect,
+    clientId,
   } = useSelector((store) => store.admin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (redirect) {
+    if (clientId) {
       setTimeout(() => {
-        navigate(`/dashboard/client/${floor}`);
+        navigate(`/dashboard/client/${clientId}`);
       }, 1000);
-      setTimeout(() => {
-        dispatch(clearAdminValues());
-      }, 2000);
     }
 
     // eslint-disable-next-line
-  }, [redirect]);
+  }, [clientId]);
   const handleClientInput = (e) => {
     let name = e.target.name,
       value = e.target.value;

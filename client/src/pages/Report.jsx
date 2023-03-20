@@ -26,7 +26,7 @@ const Report = () => {
     allClients,
     companyServices,
     singleClientLocations,
-    id,
+    locationId,
   } = useSelector((store) => store.admin);
 
   useEffect(() => {
@@ -112,12 +112,15 @@ const Report = () => {
           <button className="btn btn-primary mt-3" onClick={handleSubmit}>
             {adminLoading ? "Generating..." : "Generate Report"}
           </button>
-          {id && (
+          {locationId && (
             <button
               className="btn btn-success mt-3"
-              disabled={id ? false : true}
+              disabled={locationId ? false : true}
             >
-              <a href={id} style={{ textDecoration: "none", color: "white" }}>
+              <a
+                href={locationId}
+                style={{ textDecoration: "none", color: "white" }}
+              >
                 Download Report
               </a>
             </button>

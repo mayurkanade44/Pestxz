@@ -29,7 +29,7 @@ const SingleClient = () => {
       setEdit({
         floor: item.floor,
         location: item.location,
-        id: item._id,
+        locationId: item._id,
       })
     );
     setOpen(true);
@@ -49,7 +49,7 @@ const SingleClient = () => {
           {open ? "Back" : "Add New Location"}
         </button>
       </div>
-      {open && <AddLocation locationId={id} alreadyService={alreadyService} />}
+      {open && <AddLocation clientId={id} alreadyService={alreadyService} />}
       {singleClientLocations && (
         <div className="col-12 ">
           <table className="table table-striped table-bordered border-primary">
