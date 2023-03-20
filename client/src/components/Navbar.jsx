@@ -2,7 +2,7 @@ import { FaAlignLeft, FaUserCircle, FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
 import { Logo } from ".";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSidebar } from "../redux/userSlice";
+import { logoutUser, toggleSidebar } from "../redux/userSlice";
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
@@ -16,11 +16,7 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="nav-center">
-        <button
-          type="button"
-          className="toggle-btn"
-          onClick={toggle}
-        >
+        <button type="button" className="toggle-btn" onClick={toggle}>
           <FaAlignLeft />
         </button>
         <div>
@@ -41,7 +37,7 @@ const Navbar = () => {
             <button
               type="button"
               className="dropdown-btn"
-              onClick={() => console.log("Logging out...")}
+              onClick={() => dispatch(logoutUser())}
             >
               logout
             </button>

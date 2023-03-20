@@ -64,6 +64,12 @@ const userSlice = createSlice({
       state[name] = value;
     },
     clearUserValues: (state) => initialState,
+    logoutUser: (state) => {
+      state.user = null;
+      state.isSidebarOpen = false;
+      localStorage.removeItem("user");
+      toast.success("Successfully Logout");
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,7 +80,7 @@ const userSlice = createSlice({
         state.userLoading = false;
         state.user = payload.user;
         localStorage.setItem("user", JSON.stringify(payload.user));
-        state.name = "";
+        state.email = "";
         state.password = "";
         toast.success(payload.msg);
       })
@@ -108,6 +114,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, handleUser, clearUserValues } = userSlice.actions;
+export const { toggleSidebar, handleUser, clearUserValues, logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -104,11 +104,27 @@ export const addLocation = createAsyncThunk(
 );
 
 export const getLocation = createAsyncThunk(
-  "user/getLocation",
+  "admin/getLocation",
   async (locationId, thunkAPI) => {
     try {
       const res = await authFetch.get(
         `/location/locationServices/${locationId}`
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const editLocation = createAsyncThunk(
+  "admin/editLocation",
+  async ({ locationId, location }, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(
+        `/location/locationServices/${locationId}`,
+        location
       );
       return res.data;
     } catch (error) {
