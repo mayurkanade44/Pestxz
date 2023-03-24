@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { InputRow } from ".";
@@ -13,6 +14,11 @@ const AddService = ({
   toggle,
 }) => {
   const dispatch = useDispatch();
+  const [service, setService] = useState({
+    name: "",
+    applications: [],
+  });
+  const [option, setOption] = useState("");
 
   const handleServiceInput = (e) => {
     let name = e.target.name,
@@ -20,11 +26,25 @@ const AddService = ({
     dispatch(handleAdmin({ name, value }));
   };
 
+  const addOptions = (option) => {
+    setService((prev) => ({
+      ...prev,
+      applications: [...prev.applications, capitalLetter(option)],
+    }));
+    setOption("");
+  };
+
+  const removeOption = (option) => {
+    setService((prev) => ({
+      ...prev,
+      applications: prev.applications.filter((item) => item !== option),
+    }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!shipToName || !shipToAddress) {
-      toast.error("Please provide all fields");
+    if (!service.name || service.applications.length < 1) {
+      toast.error("Please fill out all fields");
       return;
     }
 
@@ -43,10 +63,11 @@ const AddService = ({
 
     dispatch(
       addService({
-        serviceName: capitalLetter(shipToName),
-        serviceOption: capitalLetter(shipToAddress.split(",")),
+        serviceName: capitalLetter(service.name),
+        serviceOption: service.applications,
       })
     );
+    setService({ name: "", applications: [] });
   };
 
   return (
@@ -61,26 +82,57 @@ const AddService = ({
         <span></span>
       </div>
       <form className="form" onSubmit={handleSubmit}>
-        <div className="form-center">
-          <InputRow
-            type="text"
-            labelText="Service Name"
-            name="shipToName"
-            value={shipToName}
-            handleChange={handleServiceInput}
-          />
-          <InputRow
-            type="text"
-            labelText="Application Options"
-            placeholder="options must be separated by comma"
-            name="shipToAddress"
-            value={shipToAddress}
-            handleChange={handleServiceInput}
-          />
-          <div className="btn-container">
+        <div className="row">
+          <div className="col-md-4">
+            <InputRow
+              type="text"
+              labelText="Service Name"
+              name="name"
+              value={service.name}
+              handleChange={(e) =>
+                setService((prev) => ({ ...prev, name: e.target.value }))
+              }
+            />
+          </div>
+          <div className="col-md-4">
+            <InputRow
+              type="text"
+              labelText={`Application Options`}
+              name="shipToAddress"
+              value={option}
+              handleChange={(e) => setOption(e.target.value)}
+            />
+          </div>
+          <div className="col-md-2 mt-5">
+            <div className="btn-container">
+              <button
+                className="btn btn-sm"
+                onClick={() => addOptions(option)}
+                type="button"
+              >
+                <p style={{ fontWeight: 700 }}>+</p>
+              </button>
+            </div>
+          </div>
+          <div className="col-md-12 my-3">
+            <h6 className="d-inline">Added Options - </h6>
+            {service.applications.map((item) => {
+              return (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-primary1 me-2"
+                  key={item}
+                  onClick={() => removeOption(item)}
+                >
+                  {item}
+                </button>
+              );
+            })}
+          </div>
+          <div className="col-md-3 d-flex justify-content-center">
             <button
               type="submit"
-              className="btn btn-block submit-btn"
+              className="btn btn-block btn-success "
               onClick={handleSubmit}
               disabled={adminLoading}
             >

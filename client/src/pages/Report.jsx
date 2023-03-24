@@ -18,13 +18,9 @@ const Report = () => {
   const { client, subLocation, service, fromDate, toDate, user } = reportField;
 
   const dispatch = useDispatch();
-  const {
-    adminLoading,
-    allClients,
-    companyServices,
-    singleClientLocations,
-    locationId,
-  } = useSelector((store) => store.admin);
+  const { allClients, companyServices, singleClientLocations } = useSelector(
+    (store) => store.admin
+  );
   const { reportLoading, download } = useSelector((store) => store.report);
 
   useEffect(() => {
@@ -53,6 +49,7 @@ const Report = () => {
     e.preventDefault();
     if (!client || !fromDate || !toDate)
       return toast.error("Please select all required fields");
+
     dispatch(createReport({ client, subLocation, service, fromDate, toDate }));
   };
 
@@ -61,9 +58,6 @@ const Report = () => {
       <form className="form">
         <h4 className="text-center">Report Generation Form</h4>
         <div className="form-center">
-          {/* search position */}
-
-          {/* search by status */}
           <InputSelect
             labelText="Client Name*"
             name="client"
@@ -107,7 +101,11 @@ const Report = () => {
             handleChange={handleSearch}
             list={["All", ...companyServices]}
           />
-          <button className="btn btn-primary mt-3" onClick={handleSubmit} disabled={reportLoading}>
+          <button
+            className="btn btn-primary mt-3"
+            onClick={handleSubmit}
+            disabled={reportLoading}
+          >
             {reportLoading ? "Creating Report..." : "Generate Report"}
           </button>
           {download && (
