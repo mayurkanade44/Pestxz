@@ -145,7 +145,7 @@ const adminSlice = createSlice({
     },
     clearAdminValues: (state) => initialState,
     setEdit: (state, { payload }) => {
-      return { ...state, isEditing: true, ...payload };
+      return { ...state, ...payload };
     },
   },
   extraReducers: (builder) => {

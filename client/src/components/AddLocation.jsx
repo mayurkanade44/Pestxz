@@ -5,6 +5,7 @@ import {
   editLocation,
   getCompanyServices,
   handleAdmin,
+  setEdit,
 } from "../redux/adminSlice";
 import { InputRow } from ".";
 import { capitalLetter } from "../utils/data";
@@ -46,44 +47,24 @@ const AddLocation = ({ clientId, alreadyService }) => {
 
   useEffect(() => {
     if (alreadyService) {
+      setAddServices({ name: [], services: [] });
       for (let item of alreadyService) {
         setAddServices((prev) => ({
           ...prev,
           name: [...prev.name, item],
           services: [...prev.services, item._id],
         }));
-        setAllServices((allServices) =>
-          allServices.filter((it) => it._id !== item._id)
-        );
       }
     }
-  }, [isEditing]);
+  }, [alreadyService]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let services = addServices.services;
-
-    if (!location || !floor || services.length < 1) {
-      toast.error("Please fill all the details");
-      return;
-    }
-
-    if (isEditing) {
-      dispatch(
-        editLocation({
-          clientId,
-          locationId,
-          location: { floor: capitalLetter(floor), location, services },
-        })
-      );
-      return;
-    }
-
+  const clearAll = () => {
     dispatch(
-      addLocation({
-        clientId,
-        location: { floor: capitalLetter(floor), location, services },
+      setEdit({
+        isEditing: false,
+        floor: "",
+        location: "",
+        locationId: "",
       })
     );
   };
@@ -121,6 +102,35 @@ const AddLocation = ({ clientId, alreadyService }) => {
     dispatch(handleAdmin({ name, value }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    let services = addServices.services;
+
+    if (!location || !floor || services.length < 1) {
+      toast.error("Please fill all the details");
+      return;
+    }
+
+    if (isEditing) {
+      dispatch(
+        editLocation({
+          clientId,
+          locationId,
+          location: { floor: capitalLetter(floor), location, services },
+        })
+      );
+      return;
+    }
+
+    dispatch(
+      addLocation({
+        clientId,
+        location: { floor: capitalLetter(floor), location, services },
+      })
+    );
+  };
+
   return (
     <div className="add-client mb-3">
       {allServices && (
@@ -130,7 +140,7 @@ const AddLocation = ({ clientId, alreadyService }) => {
             return (
               <button
                 type="button"
-                className="btn btn-sm ms-3"
+                className="btn btn-sm ms-2 mb-1"
                 key={item._id}
                 onClick={() => addService(item)}
               >
@@ -140,7 +150,7 @@ const AddLocation = ({ clientId, alreadyService }) => {
           })}
         </>
       )}
-      <form className="row mt-4" onSubmit={handleSubmit}>
+      <form className="row" onSubmit={handleSubmit}>
         <div className="col-md-4">
           <InputRow
             type="text"
@@ -159,13 +169,13 @@ const AddLocation = ({ clientId, alreadyService }) => {
             handleChange={handleLocationInput}
           />
         </div>
-        <div className="col-md-12 my-2">
+        <div className="col-md-12 my-1">
           <p className="mb-1">Added Services</p>
           {addServices.name.map((item) => {
             return (
               <button
                 type="button"
-                className="btn btn-sm btn-success me-3 mb-1"
+                className="btn btn-sm btn-success me-2 mb-1"
                 key={item._id}
                 onClick={() => removeService(item)}
               >
@@ -174,16 +184,21 @@ const AddLocation = ({ clientId, alreadyService }) => {
             );
           })}
         </div>
-        <div className="col-md-12 mt-3">
+        <div className="col-md-12">
           <div className="d-flex justify-content-center">
             <button
               type="submit"
-              className="btn btn-lg btn-primary"
+              className="btn btn-primary me-2"
               onClick={handleSubmit}
               disabled={adminLoading}
             >
               {adminLoading ? "saving..." : isEditing ? "Save" : "Add Location"}
             </button>
+            {isEditing && (
+              <button type="button" className="btn" onClick={() => clearAll()}>
+                Clear Values
+              </button>
+            )}
           </div>
         </div>
       </form>

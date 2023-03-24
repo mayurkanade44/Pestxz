@@ -15,7 +15,7 @@ const SingleClient = () => {
   const [alreadyService, setAlreadyService] = useState(null);
 
   useEffect(() => {
-    if (!open) dispatch(singleClient(id));
+    dispatch(singleClient(id));
 
     // eslint-disable-next-line
   }, [open]);
@@ -27,6 +27,7 @@ const SingleClient = () => {
   const openEdit = (item) => {
     dispatch(
       setEdit({
+        isEditing: true,
         floor: item.floor,
         location: item.location,
         locationId: item._id,
@@ -44,12 +45,7 @@ const SingleClient = () => {
       <div className="col-8">
         <h4>Client Address: {singleClientDetails.shipToAddress}</h4>
       </div>
-      <div className="col-4">
-        <button className="btn mb-3" onClick={() => setOpen(!open)}>
-          {open ? "Back" : "Add New Location"}
-        </button>
-      </div>
-      {open && <AddLocation clientId={id} alreadyService={alreadyService} />}
+      <AddLocation clientId={id} alreadyService={alreadyService} />
       {singleClientLocations && (
         <div className="col-12 ">
           <table className="table table-striped table-bordered border-primary">
