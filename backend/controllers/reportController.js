@@ -6,10 +6,10 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
 export const addRecord = async (req, res) => {
-  const { reportData } = req.body;
+  const { action } = req.body;
   const { id } = req.params;
   try {
-    if (!reportData || reportData.length < 1)
+    if (!action || action.length < 1)
       return res.status(400).json({ msg: "Please select appropriate options" });
 
     const locationExists = await Location.findById(id);
@@ -18,9 +18,39 @@ export const addRecord = async (req, res) => {
         .status(404)
         .json({ msg: "Given location not found, contact admin" });
 
+    let images = [];
+    if (req.files) {
+      if (req.files.image.length > 1) images = req.files.image;
+      else images.push(req.files.image);
+    }
+
+    const reportData = [];
+    for (let i = 0; i < req.body.id.length; i++) {
+      let temp = {};
+      if(req.body.action[i] === 'false') continue
+      temp.id = req.body.id[i];
+      temp.serviceName = req.body.serviceName[i];
+      temp.action = req.body.action[i];
+      temp.value = req.body.value[i];
+      temp.comment = req.body.comment[i];
+      if (req.body.uploaded[i] === "true") {
+        const result = await cloudinary.uploader.upload(
+          images[i].tempFilePath,
+          {
+            use_filename: true,
+            folder: "reports",
+            quality: 30,
+          }
+        );
+        temp.image = result.secure_url;
+        fs.unlinkSync(images[i].tempFilePath);
+      }
+      reportData.push(temp);
+    }
     req.body.shipTo = locationExists.shipTo;
     req.body.location = id;
     req.body.user = req.user.userId;
+    req.body.reportData = reportData
 
     await Report.create(req.body);
     return res.status(201).json({ msg: "Record has been saved" });
@@ -159,7 +189,7 @@ export const generateServiceReport = async (req, res) => {
         location: item.location,
         service: item.services.serviceName,
         activity: item.services.action,
-        user:item.user.name
+        user: item.user.name,
       });
     });
 

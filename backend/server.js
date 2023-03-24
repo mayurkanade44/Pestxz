@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import { v2 as cloudinary } from "cloudinary";
+import fileUpload from "express-fileupload";
 
 import userRouter from "./routes/userRoute.js";
 import companyRouter from "./routes/companyRoute.js";
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 app.use(express.json());
+app.use(fileUpload({ useTempFiles: true }));
 
 app.use("/api/user", userRouter);
 app.use("/api/company", companyRouter);
