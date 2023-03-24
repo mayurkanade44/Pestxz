@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { InputRow } from ".";
@@ -6,8 +6,7 @@ import { addService, editService, handleAdmin } from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
 
 const AddService = ({
-  shipToName,
-  shipToAddress,
+  alreadyService,
   adminLoading,
   isEditing,
   id,
@@ -20,11 +19,14 @@ const AddService = ({
   });
   const [option, setOption] = useState("");
 
-  const handleServiceInput = (e) => {
-    let name = e.target.name,
-      value = e.target.value;
-    dispatch(handleAdmin({ name, value }));
-  };
+  useEffect(() => {
+    if (alreadyService) {
+      setService({
+        name: alreadyService.name,
+        applications: alreadyService.options,
+      });
+    }
+  }, []);
 
   const addOptions = (option) => {
     setService((prev) => ({
@@ -53,11 +55,13 @@ const AddService = ({
         editService({
           serviceId: id,
           service: {
-            serviceName: capitalLetter(shipToName),
-            serviceOption: capitalLetter(shipToAddress.split(",")),
+            serviceName: capitalLetter(service.name),
+            serviceOption: service.applications,
           },
         })
       );
+      setService({ name: "", applications: [] });
+
       return;
     }
 

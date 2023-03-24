@@ -4,16 +4,12 @@ import { AddService } from "../components";
 import { getCompanyServices, setEdit } from "../redux/adminSlice";
 
 const Services = () => {
-  const {
-    shipToName,
-    shipToAddress,
-    adminLoading,
-    companyServices,
-    isEditing,
-    id,
-  } = useSelector((store) => store.admin);
+  const { adminLoading, companyServices, isEditing, locationId } = useSelector(
+    (store) => store.admin
+  );
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+  const [alreadyService, setAlreadyService] = useState(null);
 
   useEffect(() => {
     if (!open) {
@@ -27,29 +23,27 @@ const Services = () => {
     setOpen(true);
     dispatch(
       setEdit({
-        shipToName: item.serviceName,
-        shipToAddress: item.serviceOption.join(", "),
-        id: item._id,
+        locationId: item._id,
       })
     );
+    setAlreadyService({ name: item.serviceName, options: item.serviceOption });
   };
 
   return (
     <div>
       {open ? (
         <AddService
-          shipToName={shipToName}
-          shipToAddress={shipToAddress}
+          alreadyService={alreadyService}
           adminLoading={adminLoading}
           isEditing={isEditing}
-          id={id}
+          id={locationId}
           toggle={setOpen}
         />
       ) : (
         <>
           <button
             className="btn btn-lg btn-success mb-3"
-            onClick={() => setOpen(true)}
+            onClick={() => (setOpen(true), setAlreadyService(null))}
           >
             Add New Service
           </button>
