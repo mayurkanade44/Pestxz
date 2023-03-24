@@ -7,10 +7,11 @@ const InputRow = ({
   handleChange,
   labelText,
   placeholder,
+  qr,
 }) => {
   return (
-    <div className="form-row">
-      <label htmlFor={name} className="form-label">
+    <div className={qr ? "form-qr" : "form-row"}>
+      <label htmlFor={name} className={qr ? "form-label-qr" : "form-label"}>
         {labelText || name}
       </label>
       <input

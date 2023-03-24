@@ -726,15 +726,13 @@ ul {
 /*===================== QR Location =====================*/
 
 .location {
-  border-radius: var(--borderRadius);
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background: var(--white);
-  box-shadow: var(--shadow-2);
 }
 
 .location .details {
-  padding: 7px 48px 0px;
+  padding: 7px 20px 0px;
 }
 
 .location .details h5 {
@@ -746,13 +744,41 @@ ul {
 }
 
 .location-form {
-  width: 90vw;
+  width: 100vw;
   max-width: var(--fixed-width);
   background: var(--white);
-  padding: 0px 2.5rem;
-  margin: 5px;
+  padding: 0px 20px;
 }
 
 .hr {
-  border-top: 2px dashed var(--green)
+  margin: 8px 0px !important;
+  border-top: 2px dashed var(--green);
+}
+
+.form-qr {
+  margin: 0 0 5px;
+}
+
+.form-label-qr {
+  margin-bottom: 4px;
+}
+
+.qr .btn {
+  cursor: pointer;
+  color: var(--white);
+  background: var(--primary-500);
+  border: transparent;
+  border-radius: var(--borderRadius);
+  letter-spacing: var(--letterSpacing);
+  padding: 5px;
+  margin-top: 25px;
+  box-shadow: var(--shadow-2);
+  text-transform: capitalize;
+}
+.upload {
+  width: 0px;
+  height: 0px;
+  margin-top: 24px;
+  overflow: "hidden";
+  opacity: 0;
 }

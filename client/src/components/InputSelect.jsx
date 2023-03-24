@@ -1,7 +1,15 @@
-const InputSelect = ({ labelText, name, value, handleChange, list, id }) => {
+const InputSelect = ({
+  labelText,
+  name,
+  value,
+  handleChange,
+  list,
+  id,
+  qr,
+}) => {
   return (
-    <div className="form-row">
-      <label htmlFor={name} className="form-label">
+    <div className={qr ? "form-qr" : "form-row"}>
+      <label htmlFor={name} className={qr ? "form-label-qr" : "form-label"}>
         {labelText}
       </label>
       <select

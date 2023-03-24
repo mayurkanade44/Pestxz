@@ -9,10 +9,12 @@ const initialState = {
 
 export const addLocationRecord = createAsyncThunk(
   "user/addLocationRecord",
-  async ({ id, reportData }, thunkAPI) => {
+  async ({ id, form }, thunkAPI) => {
     try {
-      const res = await authFetch.post(`/report/addRecord/${id}`, {
-        reportData,
+      const res = await authFetch.post(`/report/addRecord/${id}`, form, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       return res.data;
     } catch (error) {
