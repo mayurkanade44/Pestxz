@@ -51,7 +51,7 @@ export const addService = createAsyncThunk(
   async (service, thunkAPI) => {
     try {
       const res = await authFetch.post("/admin/service", service);
-      thunkAPI.dispatch(clearAdminValues());
+      thunkAPI.dispatch(getCompanyServices());
       return res.data;
     } catch (error) {
       console.log(error);
@@ -78,7 +78,7 @@ export const editService = createAsyncThunk(
   async ({ serviceId, service }, thunkAPI) => {
     try {
       const res = await authFetch.patch(`/admin/service/${serviceId}`, service);
-      thunkAPI.dispatch(clearAdminValues());
+      thunkAPI.dispatch(getCompanyServices());
       return res.data;
     } catch (error) {
       console.log(error);

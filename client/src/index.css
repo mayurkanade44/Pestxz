@@ -650,7 +650,7 @@ ul {
   border-radius: var(--borderRadius);
   width: 100%;
   background: var(--white);
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: var(--shadow-2);
 }
 .add-client h3 {

@@ -8,16 +8,14 @@ const Services = () => {
     (store) => store.admin
   );
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [alreadyService, setAlreadyService] = useState(null);
 
   useEffect(() => {
-    if (!open) {
-      dispatch(getCompanyServices());
-    }
+    dispatch(getCompanyServices());
 
     // eslint-disable-next-line
-  }, [open]);
+  }, []);
 
   const openEdit = (item) => {
     setOpen(true);
@@ -31,7 +29,18 @@ const Services = () => {
 
   return (
     <div>
-      {open ? (
+      {!open && (
+        <button
+          className="btn btn-lg btn-success "
+          onClick={() => {
+            setOpen(!open);
+            setAlreadyService(null);
+          }}
+        >
+          Add New Service
+        </button>
+      )}
+      {open && (
         <AddService
           alreadyService={alreadyService}
           adminLoading={adminLoading}
@@ -39,44 +48,35 @@ const Services = () => {
           id={locationId}
           toggle={setOpen}
         />
-      ) : (
-        <>
-          <button
-            className="btn btn-lg btn-success mb-3"
-            onClick={() => (setOpen(true), setAlreadyService(null))}
-          >
-            Add New Service
-          </button>
-          <table className="table table-striped table-bordered border-primary">
-            <thead>
-              <tr>
-                <th className="text-center">Service Name</th>
-                <th className="text-center">Service Options</th>
-                <th style={{ width: 150 }} className="text-center">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {companyServices.map((item) => (
-                <tr key={item._id}>
-                  <td>{item.serviceName}</td>
-                  <td>{item.serviceOption.join(", ")}</td>
-                  <td>
-                    <button
-                      className="btn edit-btn btn-sm me-2"
-                      onClick={() => openEdit(item)}
-                    >
-                      Edit
-                    </button>
-                    <button className="btn btn-sm btn-danger">Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
       )}
+      <table className="table table-striped table-bordered border-primary mt-3">
+        <thead>
+          <tr>
+            <th className="text-center">Service Name</th>
+            <th className="text-center">Service Options</th>
+            <th style={{ width: 150 }} className="text-center">
+              Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {companyServices.map((item) => (
+            <tr key={item._id}>
+              <td>{item.serviceName}</td>
+              <td>{item.serviceOption.join(", ")}</td>
+              <td>
+                <button
+                  className="btn edit-btn btn-sm me-2"
+                  onClick={() => openEdit(item)}
+                >
+                  Edit
+                </button>
+                <button className="btn btn-sm btn-danger">Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { InputRow } from ".";
-import { addService, editService, handleAdmin } from "../redux/adminSlice";
+import { addService, editService } from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
 
 const AddService = ({
@@ -26,7 +26,9 @@ const AddService = ({
         applications: alreadyService.options,
       });
     }
-  }, []);
+
+    // eslint-disable-next-line
+  }, [alreadyService]);
 
   const addOptions = (option) => {
     setService((prev) => ({
@@ -42,6 +44,7 @@ const AddService = ({
       applications: prev.applications.filter((item) => item !== option),
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,7 +64,6 @@ const AddService = ({
         })
       );
       setService({ name: "", applications: [] });
-
       return;
     }
 

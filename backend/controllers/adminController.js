@@ -30,7 +30,7 @@ export const getCompanyServices = async (req, res) => {
   try {
     const services = await Admin.find({ company: req.user.company }).select(
       "serviceName serviceOption"
-    );
+    ).sort("-createdAt");
     const allShipTo = await ShipTo.find({ company: req.user.company });
     return res.status(200).json({ services, allShipTo });
   } catch (error) {
