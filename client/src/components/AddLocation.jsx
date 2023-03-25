@@ -8,7 +8,7 @@ import {
   handleAdmin,
   setEdit,
 } from "../redux/adminSlice";
-import { DeleteModal, InputRow } from ".";
+import { DeleteModal, InputRow, Loading } from ".";
 import { capitalLetter } from "../utils/data";
 import { toast } from "react-toastify";
 
@@ -136,6 +136,8 @@ const AddLocation = ({ clientId, alreadyService }) => {
       })
     );
   };
+
+  if (adminLoading) return <Loading />;
 
   return (
     <div className="add-client mb-3">

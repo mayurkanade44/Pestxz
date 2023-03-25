@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { Loading } from "../components";
 import { getCompanyServices } from "../redux/adminSlice";
 import { toggleSidebar } from "../redux/userSlice";
 
@@ -12,10 +13,12 @@ const Stats = () => {
     dispatch(getCompanyServices());
   }, []);
 
+  if (adminLoading) return <Loading />;
+
   return (
     <div className="add-client">
       <div className="row">
-        <h4 className="text-center">All Clients</h4>
+        <h4 className="text-center">{allClients.length > 0 ? "All Clients" : "No Client"}</h4>
         {allClients?.map((item, index) => {
           return (
             <div className="col-md-4" key={item._id}>

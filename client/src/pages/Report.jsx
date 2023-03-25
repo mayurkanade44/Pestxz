@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { InputRow, InputSelect } from "../components";
+import { InputRow, InputSelect, Loading } from "../components";
 import { getCompanyServices, singleClient } from "../redux/adminSlice";
 import { createReport } from "../redux/reportSlice";
 
@@ -52,6 +52,8 @@ const Report = () => {
 
     dispatch(createReport({ client, subLocation, service, fromDate, toDate }));
   };
+
+  if (reportLoading) return <Loading />;
 
   return (
     <div className="add-client">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddUser } from "../components";
+import { AddUser, Loading } from "../components";
 import { getAllUsers } from "../redux/userSlice";
 
 const Profile = () => {
@@ -12,6 +12,8 @@ const Profile = () => {
     dispatch(getAllUsers());
   }, []);
 
+  if (userLoading) return <Loading />;
+
   return (
     <div className="profile">
       {toggle ? (
@@ -21,10 +23,10 @@ const Profile = () => {
           {allUsers[0] && (
             <>
               <h3 className="text-center mt-0">Company Details</h3>
-              <div className="col-md-4">
+              <div className="col-md-5">
                 <h5>Name - {allUsers[0].company.companyName} </h5>
               </div>
-              <div className="col-md-8">
+              <div className="col-md-7">
                 <h5>Address - {allUsers[0].company.companyAddress} </h5>
               </div>
               <div className="col-md-6">

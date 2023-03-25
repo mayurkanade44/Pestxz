@@ -67,7 +67,7 @@ html {
   --fixed-width: 500px;
   --fluid-width: 90vw;
   --breakpoint-lg: 992px;
-  --nav-height: 6rem;
+  --nav-height: 4.5rem;
   /* box shadow*/
   --shadow-1: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --shadow-2: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -391,6 +391,19 @@ ul {
   }
 }
 
+@media (max-width: 767px) {
+  .landing .page {
+    margin: 0 10px;
+  }
+  .landing .info h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+  }
+  .landing .form {
+    margin-top: 20px;
+  }
+}
+
 /*===================== Dashboard =====================*/
 
 .dashboard {
@@ -499,6 +512,9 @@ ul {
   }
 }
 
+@media (max-width: 767px) {
+}
+
 /*===================== Big Sidebar =====================*/
 
 .big-bar {
@@ -513,7 +529,7 @@ ul {
     background: var(--white);
     min-height: 100vh;
     height: 100%;
-    width: 250px;
+    width: 220px;
     margin-left: -250px;
     transition: var(--transition);
   }
@@ -787,4 +803,17 @@ ul {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-self: flex-end;
+}
+
+.loading1 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(155, 143, 143, 0.514);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

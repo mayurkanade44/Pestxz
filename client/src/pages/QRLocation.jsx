@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { InputRow, InputSelect } from "../components";
+import { InputRow, InputSelect, Loading } from "../components";
 import { getLocation } from "../redux/adminSlice";
 import { addLocationRecord } from "../redux/reportSlice";
 
@@ -81,9 +81,11 @@ const QRLocation = () => {
     dispatch(addLocationRecord({ id, form }));
   };
 
+  if (adminLoading) return <Loading />;
+
   return (
     <div className="location">
-      {singleLocation && (
+      {singleLocation.floor ? (
         <div>
           <div className="details">
             <h5>Floor - {singleLocation.floor}</h5>
@@ -150,6 +152,10 @@ const QRLocation = () => {
             </button>
           </form>
         </div>
+      ) : (
+        <h4 className="text-center">
+          No Location Found. <br /> Contact Admin
+        </h4>
       )}
     </div>
   );
