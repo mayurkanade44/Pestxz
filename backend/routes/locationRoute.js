@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addLocation,
+  deleteLocation,
   editLocation,
   getLocationServices,
   getSingleShipTo,
@@ -11,7 +12,8 @@ router.route("/addLocation/:id").post(addLocation);
 router
   .route("/locationServices/:id")
   .get(getLocationServices)
-  .patch(editLocation);
+  .patch(editLocation)
+  .delete(deleteLocation)
 router.route("/singleShipTo/:id").get(getSingleShipTo);
 
 export default router;

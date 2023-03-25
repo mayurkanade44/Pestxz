@@ -78,6 +78,8 @@ const Services = () => {
                 </button>
                 <DeleteModal
                   handleDelete={() => dispatch(deleteService(item._id))}
+                  name={item.serviceName}
+                  title="Service"
                 />
               </td>
             </tr>

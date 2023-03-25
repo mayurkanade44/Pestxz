@@ -71,7 +71,7 @@ export const editLocation = async (req, res) => {
   const { id } = req.params;
   try {
     const loc = await Location.findById(id);
-    if (!loc) return res.status(404).json({ msg: "No location found" });
+    if (!loc) return res.status(404).json({ msg: "Location not found" });
 
     await Location.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,
@@ -79,6 +79,20 @@ export const editLocation = async (req, res) => {
     });
 
     return res.status(200).json({ msg: "Successfully updated" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const deleteLocation = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const location = await Location.findById(id);
+    if (!location) return res.status(404).json({ msg: "Location not found" });
+    
+    await location.deleteOne();
+    return res.status(200).json({ msg: "Successfully deleted" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

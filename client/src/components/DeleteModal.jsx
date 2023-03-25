@@ -1,4 +1,4 @@
-const DeleteModal = ({ handleDelete }) => {
+const DeleteModal = ({ handleDelete, name, title }) => {
   return (
     <div>
       <button
@@ -19,11 +19,8 @@ const DeleteModal = ({ handleDelete }) => {
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h4
-                className="modal-title text-danger"
-                id="exampleModalLabel"
-              >
-                Delete Service
+              <h4 className="modal-title text-danger" id="exampleModalLabel">
+                {`Delete ${title}`}
               </h4>
               <button
                 type="button"
@@ -33,7 +30,11 @@ const DeleteModal = ({ handleDelete }) => {
               ></button>
             </div>
             <div className="modal-body">
-              Are sure you want to delete this item?
+              Are you sure you want to
+              <b className="ms-1">
+                Delete {name} {title}
+              </b>
+              ?
             </div>
             <div className="modal-footer d-flex justify-content-center">
               <button

@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addLocation,
+  deleteLocation,
   editLocation,
   getCompanyServices,
   handleAdmin,
   setEdit,
 } from "../redux/adminSlice";
-import { InputRow } from ".";
+import { DeleteModal, InputRow } from ".";
 import { capitalLetter } from "../utils/data";
 import { toast } from "react-toastify";
 
@@ -67,6 +68,11 @@ const AddLocation = ({ clientId, alreadyService }) => {
         locationId: "",
       })
     );
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteLocation({ clientId, locationId }));
+    clearAll();
   };
 
   const addService = (ser) => {
@@ -133,7 +139,9 @@ const AddLocation = ({ clientId, alreadyService }) => {
 
   return (
     <div className="add-client mb-3">
-      <h4 className="text-center">{isEditing ? "Edit Location" : "Add New Location"}</h4>
+      <h4 className="text-center">
+        {isEditing ? "Edit Location" : "Add New Location"}
+      </h4>
       {allServices && (
         <>
           <span className="service-span">Available Services :</span>
@@ -196,9 +204,20 @@ const AddLocation = ({ clientId, alreadyService }) => {
               {adminLoading ? "saving..." : isEditing ? "Save" : "Add Location"}
             </button>
             {isEditing && (
-              <button type="button" className="btn" onClick={() => clearAll()}>
-                Clear Values
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="btn me-2"
+                  onClick={() => clearAll()}
+                >
+                  Clear Values
+                </button>
+                <DeleteModal
+                  handleDelete={() => handleDelete()}
+                  name={location}
+                  title="Location"
+                />
+              </>
             )}
           </div>
         </div>
