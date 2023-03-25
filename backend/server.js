@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
 app.use("/api/user", userRouter);
-app.use("/api/company", companyRouter);
+app.use("/api/company", authenticateUser, companyRouter);
 app.use("/api/shipTo", authenticateUser, shipToRouter);
 app.use("/api/admin", authenticateUser, adminRouter);
 app.use("/api/location", authenticateUser, locationRouter);
