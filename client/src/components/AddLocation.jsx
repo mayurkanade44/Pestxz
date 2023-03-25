@@ -133,6 +133,7 @@ const AddLocation = ({ clientId, alreadyService }) => {
 
   return (
     <div className="add-client mb-3">
+      <h4 className="text-center">{isEditing ? "Edit Location" : "Add New Location"}</h4>
       {allServices && (
         <>
           <span className="service-span">Available Services :</span>

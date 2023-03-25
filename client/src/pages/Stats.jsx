@@ -35,7 +35,6 @@ const Stats = () => {
                   <Link
                     to={`/dashboard/client/${item._id}`}
                     className="btn btn-sm btn-primary"
-                    onClick={() => dispatch(toggleSidebar())}
                   >
                     All Sub Locations
                   </Link>

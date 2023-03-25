@@ -22,6 +22,7 @@ const Services = () => {
     dispatch(
       setEdit({
         locationId: item._id,
+        isEditing: true,
       })
     );
     setAlreadyService({ name: item.serviceName, options: item.serviceOption });
