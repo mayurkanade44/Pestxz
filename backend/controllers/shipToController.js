@@ -16,6 +16,7 @@ export const addShipTo = async (req, res) => {
 
     const alreadyShipTo = await ShipTo.findOne({
       shipToName: { $regex: shipToName, $options: "i" },
+      company: req.user.company,
     });
     if (alreadyShipTo)
       return res.status(400).json({ msg: `${shipToName} already exists` });

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { InputRow, InputSelect, Loading } from "../components";
 import { getCompanyServices, singleClient } from "../redux/adminSlice";
 import { createReport } from "../redux/reportSlice";
+import { getAllUsers } from "../redux/userSlice";
 
 const Report = () => {
   const [location, setLocation] = useState([]);
@@ -22,9 +23,11 @@ const Report = () => {
     (store) => store.admin
   );
   const { reportLoading, download } = useSelector((store) => store.report);
+  const { allUsers } = useSelector((store) => store.user);
 
   useEffect(() => {
     dispatch(getCompanyServices());
+    dispatch(getAllUsers());
 
     if (client && client !== "Select") {
       dispatch(singleClient(client));
@@ -32,12 +35,17 @@ const Report = () => {
   }, [client]);
 
   useEffect(() => {
-    singleClientLocations.map((item) =>
-      setLocation((location) => [
-        ...location,
-        `${item.floor} / ${item.location}`,
-      ])
-    );
+    singleClientLocations.map((item) => {
+      const loc = location.some(
+        (i) => i === `${item.floor} / ${item.location}`
+      );
+      if (!loc) {
+        setLocation((location) => [
+          ...location,
+          `${item.floor} / ${item.location}`,
+        ]);
+      }
+    });
   }, [singleClientLocations]);
 
   const handleSearch = (e) => {
@@ -50,7 +58,7 @@ const Report = () => {
     if (!client || !fromDate || !toDate)
       return toast.error("Please select all required fields");
 
-    dispatch(createReport({ client, subLocation, service, fromDate, toDate }));
+    dispatch(createReport({ client, subLocation, service, fromDate, toDate, user }));
   };
 
   if (reportLoading) return <Loading />;
@@ -101,7 +109,7 @@ const Report = () => {
             name="user"
             value={user}
             handleChange={handleSearch}
-            list={["All", ...companyServices]}
+            list={["All", ...allUsers]}
           />
           <button
             className="btn btn-primary mt-3"

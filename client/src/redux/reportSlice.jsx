@@ -26,10 +26,13 @@ export const addLocationRecord = createAsyncThunk(
 
 export const createReport = createAsyncThunk(
   "user/createReport",
-  async ({ client, fromDate, toDate, subLocation, service }, thunkAPI) => {
+  async (
+    { client, fromDate, toDate, subLocation, service, user },
+    thunkAPI
+  ) => {
     try {
       const res = await authFetch.get(
-        `/report/allReports?shipTo=${client}&fromDate=${fromDate}&toDate=${toDate}&serviceId=${service}`
+        `/report/allReports?shipTo=${client}&fromDate=${fromDate}&toDate=${toDate}&serviceId=${service}&user=${user}`
       );
       return res.data;
     } catch (error) {

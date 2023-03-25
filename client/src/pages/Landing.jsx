@@ -26,9 +26,15 @@ const Landing = () => {
 
   useEffect(() => {
     if (user) {
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+      if (user.role === "Admin") {
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      } else if (user.role === "Operator") {
+        setTimeout(() => {
+          navigate("/qr-location/641ed66695943560573f76f5");
+        }, 1000);
+      }
     }
 
     // eslint-disable-next-line

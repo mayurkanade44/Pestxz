@@ -37,15 +37,10 @@ const SingleClient = () => {
     setAlreadyService(item.services);
   };
 
-  
-
   return (
     <div className="row">
-      <div className="col-4">
+      <div className="col-12 text-center">
         <h4>Client Name: {singleClientDetails.shipToName}</h4>
-      </div>
-      <div className="col-8">
-        <h4>Client Address: {singleClientDetails.shipToAddress}</h4>
       </div>
       <AddLocation clientId={id} alreadyService={alreadyService} />
       {singleClientLocations && (

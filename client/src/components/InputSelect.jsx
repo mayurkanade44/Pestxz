@@ -25,7 +25,7 @@ const InputSelect = ({
               {item._id
                 ? item.shipToName
                   ? item.shipToName
-                  : item.serviceName
+                  : item.serviceName || item.name
                 : item}
             </option>
           );

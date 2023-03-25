@@ -27,7 +27,7 @@ export const addRecord = async (req, res) => {
     const reportData = [];
     for (let i = 0; i < req.body.id.length; i++) {
       let temp = {};
-      if(req.body.action[i] === 'false') continue
+      if (req.body.action[i] === "false") continue;
       temp.id = req.body.id[i];
       temp.serviceName = req.body.serviceName[i];
       temp.action = req.body.action[i];
@@ -50,7 +50,7 @@ export const addRecord = async (req, res) => {
     req.body.shipTo = locationExists.shipTo;
     req.body.location = id;
     req.body.user = req.user.userId;
-    req.body.reportData = reportData
+    req.body.reportData = reportData;
 
     await Report.create(req.body);
     return res.status(201).json({ msg: "Record has been saved" });
@@ -61,7 +61,8 @@ export const addRecord = async (req, res) => {
 };
 
 export const generateServiceReport = async (req, res) => {
-  const { shipTo, fromDate, toDate, serviceId, location, floor } = req.query;
+  const { shipTo, fromDate, toDate, serviceId, location, floor, user } =
+    req.query;
   try {
     if (!shipTo)
       return res.status(400).json({ msg: "Please select premises." });
@@ -119,6 +120,8 @@ export const generateServiceReport = async (req, res) => {
       },
     ];
 
+    if (user)
+      query.push({ $match: { "user._id": new mongoose.Types.ObjectId(user) } });
     if (serviceId) query.push({ $match: { "reportData.id": serviceId } });
     if (floor && location) {
       query.push({
@@ -178,6 +181,9 @@ export const generateServiceReport = async (req, res) => {
       { header: "Location", key: "location" },
       { header: "Service", key: "service" },
       { header: "Activity", key: "activity" },
+      { header: "Value", key: "value" },
+      { header: "Operator Comment", key: "comment" },
+      { header: "Image Link", key: "image" },
       { header: "Serviced By", key: "user" },
     ];
 
@@ -189,6 +195,9 @@ export const generateServiceReport = async (req, res) => {
         location: item.location,
         service: item.services.serviceName,
         activity: item.services.action,
+        value: item.services.value,
+        comment: item.services.comment,
+        image: item.services.image,
         user: item.user.name,
       });
     });
