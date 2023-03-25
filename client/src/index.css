@@ -782,3 +782,9 @@ ul {
   overflow: "hidden";
   opacity: 0;
 }
+
+.btn-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-self: flex-end;
+}

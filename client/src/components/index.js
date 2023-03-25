@@ -9,6 +9,7 @@ import AddLocation from "./AddLocation";
 import AddService from "./AddService";
 import InputSelect from "./InputSelect";
 import AddUser from "./AddUser";
+import DeleteModal from "./DeleteModal";
 
 export {
   Navbar,
@@ -22,4 +23,5 @@ export {
   AddService,
   InputSelect,
   AddUser,
+  DeleteModal,
 };

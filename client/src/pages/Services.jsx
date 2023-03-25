@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddService } from "../components";
-import { getCompanyServices, setEdit } from "../redux/adminSlice";
+import { AddService, DeleteModal } from "../components";
+import {
+  deleteService,
+  getCompanyServices,
+  setEdit,
+} from "../redux/adminSlice";
 
 const Services = () => {
   const { adminLoading, companyServices, isEditing, locationId } = useSelector(
@@ -28,16 +32,16 @@ const Services = () => {
     setAlreadyService({ name: item.serviceName, options: item.serviceOption });
   };
 
+  const addNew = () => {
+    setOpen(!open);
+    setAlreadyService(null);
+    dispatch(setEdit({ isEditing: false, locationId: "" }));
+  };
+
   return (
     <div>
       {!open && (
-        <button
-          className="btn btn-lg btn-success "
-          onClick={() => {
-            setOpen(!open);
-            setAlreadyService(null);
-          }}
-        >
+        <button className="btn btn-success " onClick={() => addNew()}>
           Add New Service
         </button>
       )}
@@ -65,14 +69,16 @@ const Services = () => {
             <tr key={item._id}>
               <td>{item.serviceName}</td>
               <td>{item.serviceOption.join(", ")}</td>
-              <td>
+              <td className="btn-table">
                 <button
                   className="btn edit-btn btn-sm me-2"
                   onClick={() => openEdit(item)}
                 >
                   Edit
                 </button>
-                <button className="btn btn-sm btn-danger">Delete</button>
+                <DeleteModal
+                  handleDelete={() => dispatch(deleteService(item._id))}
+                />
               </td>
             </tr>
           ))}

@@ -135,10 +135,10 @@ const AddService = ({
               );
             })}
           </div>
-          <div className="col-md-3 d-flex justify-content-center">
+          <div className="col-md-12 d-flex justify-content-center">
             <button
               type="submit"
-              className="btn btn-block btn-success "
+              className="btn btn-success "
               onClick={handleSubmit}
               disabled={adminLoading}
             >
