@@ -32,7 +32,7 @@ export const createReport = createAsyncThunk(
   ) => {
     try {
       const res = await authFetch.get(
-        `/report/allReports?shipTo=${client}&fromDate=${fromDate}&toDate=${toDate}&serviceId=${service}&user=${user}`
+        `/report/allReports?shipTo=${client}&location=${subLocation}&fromDate=${fromDate}&toDate=${toDate}&serviceId=${service}&user=${user}`
       );
       return res.data;
     } catch (error) {

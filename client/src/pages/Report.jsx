@@ -35,7 +35,7 @@ const Report = () => {
   }, [client]);
 
   useEffect(() => {
-    setLocation([])
+    setLocation([]);
     singleClientLocations.map((item) => {
       const loc = location.some(
         (i) => i === `${item.floor} / ${item.location}`
@@ -43,7 +43,7 @@ const Report = () => {
       if (!loc) {
         setLocation((location) => [
           ...location,
-          `${item.floor} / ${item.location}`,
+          { name: `${item.floor} / ${item.location}`, _id: item._id },
         ]);
       }
     });

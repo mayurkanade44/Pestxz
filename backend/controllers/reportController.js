@@ -25,7 +25,7 @@ export const addRecord = async (req, res) => {
       if (req.files.image.length > 1) temp = req.files.image;
       else temp.push(req.files.image);
       for (let i = 0; i < uploaded.length; i++) {
-        if (uploaded[i] === 'false') images.push("false");
+        if (uploaded[i] === "false") images.push("false");
         else images.push(temp.shift());
       }
     }
@@ -126,26 +126,29 @@ export const generateServiceReport = async (req, res) => {
       },
     ];
 
-    if (user)
+    if (user && user !== "All")
       query.push({ $match: { "user._id": new mongoose.Types.ObjectId(user) } });
-    if (serviceId) query.push({ $match: { "reportData.id": serviceId } });
-    if (floor && location) {
+    if (serviceId && serviceId !== "All")
+      query.push({ $match: { "reportData.id": serviceId } });
+    // if (floor && location) {
+    //   query.push({
+    //     $match: {
+    //       "location.floor": floor,
+    //       "location.location": location,
+    //     },
+    //   });
+    // } else if (floor) {
+    //   query.push({
+    //     $match: {
+    //       "location.floor": floor,
+    //     },
+    //   });
+    // }
+    if (location && location !== "All") {
+      console.log(location);
       query.push({
         $match: {
-          "location.floor": floor,
-          "location.location": location,
-        },
-      });
-    } else if (floor) {
-      query.push({
-        $match: {
-          "location.floor": floor,
-        },
-      });
-    } else if (location) {
-      query.push({
-        $match: {
-          "location.location": location,
+          "location._id": new mongoose.Types.ObjectId(location),
         },
       });
     }

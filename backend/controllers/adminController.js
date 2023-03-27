@@ -16,6 +16,7 @@ export const addService = async (req, res) => {
         .json({ msg: `${serviceName} service already exists` });
 
     req.body.company = company;
+    req.body.serviceOption.sort();
     const service = await Admin.create(req.body);
     return res
       .status(201)
@@ -45,6 +46,7 @@ export const editService = async (req, res) => {
     const service = await Admin.findById(id);
     if (!service) return res.status(404).json({ msg: "Service not found" });
 
+    req.body.serviceOption.sort();
     await Admin.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,
       runValidators: true,
@@ -63,7 +65,7 @@ export const deleteService = async (req, res) => {
     const service = await Admin.findById(id);
     if (!service) return res.status(404).json({ msg: "Service not found" });
 
-    await service.deleteOne()
+    await service.deleteOne();
     return res.status(200).json({ msg: "Service has been deleted" });
   } catch (error) {
     console.log(error);
