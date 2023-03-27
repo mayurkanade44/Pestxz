@@ -12,7 +12,7 @@ import { DeleteModal, InputRow, Loading } from ".";
 import { capitalLetter } from "../utils/data";
 import { toast } from "react-toastify";
 
-const AddLocation = ({ clientId, alreadyService }) => {
+const AddLocation = ({ clientId, alreadyService, toggle }) => {
   const dispatch = useDispatch();
   const {
     adminLoading,
@@ -141,9 +141,15 @@ const AddLocation = ({ clientId, alreadyService }) => {
 
   return (
     <div className="add-client mb-3">
-      <h4 className="text-center">
-        {isEditing ? "Edit Location" : "Add New Location"}
-      </h4>
+      <div className="back">
+        <button className="btn btn-dark" onClick={() => toggle(false)}>
+          Back
+        </button>
+        <h3 className="text-center ">
+          {isEditing ? "Edit Location" : "Add Location"}
+        </h3>
+        <span></span>
+      </div>
       {allServices && (
         <>
           <span className="service-span">Available Services :</span>

@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddService, DeleteModal, Loading } from "../components";
-import {
-  deleteService,
-  getCompanyServices,
-  setEdit,
-} from "../redux/adminSlice";
+import { AddService, Loading } from "../components";
+import { getCompanyServices, setEdit } from "../redux/adminSlice";
 
 const Services = () => {
   const { adminLoading, companyServices, isEditing, locationId } = useSelector(
@@ -42,12 +38,11 @@ const Services = () => {
 
   return (
     <div>
-      {!open && (
+      {!open ? (
         <button className="btn btn-success " onClick={() => addNew()}>
           Add New Service
         </button>
-      )}
-      {open && (
+      ) : (
         <AddService
           alreadyService={alreadyService}
           adminLoading={adminLoading}
@@ -56,6 +51,7 @@ const Services = () => {
           toggle={setOpen}
         />
       )}
+
       <table className="table table-striped table-bordered border-primary mt-3">
         <thead>
           <tr>

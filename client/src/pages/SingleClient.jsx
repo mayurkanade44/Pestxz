@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { AddLocation, Loading } from "../components";
+import { AddLocation } from "../components";
 import { setEdit, singleClient } from "../redux/adminSlice";
 import { saveAs } from "file-saver";
 
@@ -9,8 +9,9 @@ const SingleClient = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const { singleClientDetails, singleClientLocations, adminLoading } =
-    useSelector((store) => store.admin);
+  const { singleClientDetails, singleClientLocations } = useSelector(
+    (store) => store.admin
+  );
 
   const [alreadyService, setAlreadyService] = useState(null);
 
@@ -37,12 +38,30 @@ const SingleClient = () => {
     setAlreadyService(item.services);
   };
 
+  const addNew = () => {
+    setOpen(!open);
+    setAlreadyService(null);
+    dispatch(setEdit({ isEditing: false, locationId: "" }));
+  };
+
   return (
     <div className="row">
       <div className="col-12 text-center">
         <h4>Client Name: {singleClientDetails.shipToName}</h4>
       </div>
-      <AddLocation clientId={id} alreadyService={alreadyService} />
+      {!open ? (
+        <div className="col-md-3">
+          <button className="btn btn-success mb-2" onClick={() => addNew()}>
+            Add New Location
+          </button>
+        </div>
+      ) : (
+        <AddLocation
+          clientId={id}
+          alreadyService={alreadyService}
+          toggle={setOpen}
+        />
+      )}
       {singleClientLocations && (
         <div className="col-12 ">
           <table className="table table-striped table-bordered border-primary">
