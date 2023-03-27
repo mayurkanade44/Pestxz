@@ -32,6 +32,8 @@ const Report = () => {
     if (client && client !== "Select") {
       dispatch(singleClient(client));
     }
+
+    // eslint-disable-next-line
   }, [client]);
 
   useEffect(() => {
@@ -46,7 +48,10 @@ const Report = () => {
           { name: `${item.floor} / ${item.location}`, _id: item._id },
         ]);
       }
+      return null;
     });
+
+    // eslint-disable-next-line
   }, [singleClientLocations]);
 
   const handleSearch = (e) => {

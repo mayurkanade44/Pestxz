@@ -11,6 +11,8 @@ const ProtectedRoute = ({ role, children }) => {
 
   useEffect(() => {
     dispatch(setEdit({ locationId: id }));
+
+    // eslint-disable-next-line
   }, [id]);
 
   if (!user) return <Navigate to="/" />;

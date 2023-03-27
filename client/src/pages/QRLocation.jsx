@@ -33,6 +33,8 @@ const QRLocation = () => {
         })
       );
     }
+
+    // eslint-disable-next-line
   }, [singleLocation]);
 
   const handleChange = (index, e) => {
