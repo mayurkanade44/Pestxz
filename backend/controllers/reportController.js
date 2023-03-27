@@ -18,10 +18,16 @@ export const addRecord = async (req, res) => {
         .status(404)
         .json({ msg: "Given location not found, contact admin" });
 
-    let images = ["a"];
+    const images = [];
     if (req.files) {
-      if (req.files.image.length > 1) images = req.files.image;
-      else images.push(req.files.image);
+      let temp = [],
+        uploaded = req.body.uploaded;
+      if (req.files.image.length > 1) temp = req.files.image;
+      else temp.push(req.files.image);
+      for (let i = 0; i < uploaded.length; i++) {
+        if (uploaded[i] === 'false') images.push("false");
+        else images.push(temp.shift());
+      }
     }
 
     const reportData = [];

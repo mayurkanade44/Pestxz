@@ -61,7 +61,7 @@ const QRLocation = () => {
     form.append("action", " ");
     form.append("value", " ");
     form.append("comment", " ");
-    form.append("uploaded", " ");
+    form.append("uploaded", false);
     form.append("image", " ");
 
     inputField.forEach((item) => {
@@ -72,7 +72,7 @@ const QRLocation = () => {
         form.append("value", item.value || " "),
         form.append("comment", item.comment || " "),
         form.append("uploaded", item.image ? true : false),
-        form.append("image", item.image)
+        form.append("image", item.image ? item.image : false)
       );
     });
 

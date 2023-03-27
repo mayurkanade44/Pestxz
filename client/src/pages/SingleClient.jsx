@@ -41,7 +41,15 @@ const SingleClient = () => {
   const addNew = () => {
     setOpen(!open);
     setAlreadyService(null);
-    dispatch(setEdit({ isEditing: false, locationId: "" }));
+    dispatch(
+      setEdit({
+        isEditing: false,
+        locationId: "",
+        clientId: "",
+        floor: "",
+        location: "",
+      })
+    );
   };
 
   return (
