@@ -11,7 +11,7 @@ import shipToRouter from "./routes/shipToRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 import locationRouter from "./routes/locationRoute.js";
 import reportRouter from "./routes/reportRoute.js";
-import { authenticateUser } from "./middleware/auth.js";
+import { authenticateUser, authorizeUser } from "./middleware/auth.js";
 
 const app = express();
 dotenv.config();
@@ -31,10 +31,10 @@ app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
 app.use("/api/user", userRouter);
-app.use("/api/company", authenticateUser, companyRouter);
-app.use("/api/shipTo", authenticateUser, shipToRouter);
-app.use("/api/admin", authenticateUser, adminRouter);
-app.use("/api/location", authenticateUser, locationRouter);
+app.use("/api/company", authenticateUser, authorizeUser("Admin"), companyRouter);
+app.use("/api/shipTo", authenticateUser, authorizeUser("Admin"), shipToRouter);
+app.use("/api/admin", authenticateUser, authorizeUser("Admin"), adminRouter);
+app.use("/api/location", authenticateUser,authorizeUser("Admin"), locationRouter);
 app.use("/api/report", authenticateUser, reportRouter);
 
 const port = process.env.PORT || 5000;

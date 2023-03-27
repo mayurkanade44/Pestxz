@@ -25,7 +25,7 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role={["Admin"]}>
               <Dashboard />
             </ProtectedRoute>
           }
@@ -40,7 +40,7 @@ function App() {
         <Route
           path="/qr-location/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role={["Admin", "Operator"]}>
               <QRLocation />
             </ProtectedRoute>
           }

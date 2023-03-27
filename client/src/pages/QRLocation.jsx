@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { InputRow, InputSelect, Loading } from "../components";
+import { InputRow, InputSelect, Loading, Navbar } from "../components";
 import { getLocation } from "../redux/adminSlice";
 import { addLocationRecord } from "../redux/reportSlice";
 
@@ -93,6 +93,7 @@ const QRLocation = () => {
 
   return (
     <div className="location">
+      <Navbar />
       {singleLocation.floor ? (
         <div>
           <div className="details">

@@ -5,6 +5,7 @@ import {
   editService,
   getCompanyServices,
 } from "../controllers/adminController.js";
+import { authorizeUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
