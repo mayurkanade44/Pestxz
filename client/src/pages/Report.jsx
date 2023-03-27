@@ -35,6 +35,7 @@ const Report = () => {
   }, [client]);
 
   useEffect(() => {
+    setLocation([])
     singleClientLocations.map((item) => {
       const loc = location.some(
         (i) => i === `${item.floor} / ${item.location}`

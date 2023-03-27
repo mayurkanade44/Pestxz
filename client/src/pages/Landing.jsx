@@ -10,6 +10,7 @@ const Landing = () => {
   const { email, password, userLoading, user } = useSelector(
     (store) => store.user
   );
+  const { locationId } = useSelector((store) => store.admin);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -32,7 +33,7 @@ const Landing = () => {
         }, 1000);
       } else if (user.role === "Operator") {
         setTimeout(() => {
-          navigate("/qr-location/641ed66695943560573f76f5");
+          navigate(`/qr-location/${locationId}`);
         }, 1000);
       }
     }
