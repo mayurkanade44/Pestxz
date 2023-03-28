@@ -9,6 +9,7 @@ export const registerUser = async (req, res) => {
     const alreadyUser = await User.findOne({
       email,
       company: req.user.company,
+      active: true,
     });
     if (alreadyUser)
       return res.status(400).json({ msg: "Email id already exists" });
@@ -16,7 +17,15 @@ export const registerUser = async (req, res) => {
     req.body.company = req.user.company;
 
     const user = await User.create(req.body);
-    const users = await User.find().select("-password");
+    const users = await User.find({
+      company: req.user.company,
+      active: true,
+    })
+      .select("-password")
+      .populate({
+        path: "company",
+        select: "companyName companyAddress companyContact companyEmail",
+      });
 
     res.status(201).json({ msg: `${user.name} has been registered`, users });
   } catch (error) {
@@ -31,7 +40,7 @@ export const loginUser = async (req, res) => {
     if (!password || !email)
       return res.status(400).json({ msg: "Please provide all values" });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email, active: true });
     if (!user) return res.status(400).json({ msg: "Invalid email id" });
 
     const comparePassword = await user.comparePassword(password);
@@ -57,7 +66,7 @@ export const loginUser = async (req, res) => {
 
 export const allUsers = async (req, res) => {
   try {
-    const users = await User.find({ company: req.user.company })
+    const users = await User.find({ company: req.user.company, active: true })
       .select("-password")
       .populate({
         path: "company",
@@ -76,11 +85,20 @@ export const deleteUser = async (req, res) => {
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ msg: "User not found" });
 
-    const name = user.name;
-    await user.remove();
+    user.active = false;
+    await user.save();
 
-    const users = await User.find().select("-password");
-    res.status(200).json({ msg: `${name} has been removed`, users });
+    const users = await User.find({
+      company: req.user.company,
+      active: true,
+    })
+      .select("-password")
+      .populate({
+        path: "company",
+        select: "companyName companyAddress companyContact companyEmail",
+      });
+
+    res.status(200).json({ msg: `${user.name} has been removed`, users });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

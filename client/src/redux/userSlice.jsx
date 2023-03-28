@@ -53,6 +53,19 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "user/delete",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.delete(`/user/delete/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -110,10 +123,19 @@ const userSlice = createSlice({
       .addCase(registerUser.rejected, (state, { payload }) => {
         state.userLoading = false;
         toast.error(payload);
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(deleteUser.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.allUsers = payload.users;
+        toast.success(payload.msg);
       });
   },
 });
 
-export const { toggleSidebar, handleUser, clearUserValues, logoutUser } = userSlice.actions;
+export const { toggleSidebar, handleUser, clearUserValues, logoutUser } =
+  userSlice.actions;
 
 export default userSlice.reducer;

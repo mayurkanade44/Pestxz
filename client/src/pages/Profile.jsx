@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AddUser, Loading } from "../components";
-import { getAllUsers } from "../redux/userSlice";
+import { deleteUser, getAllUsers } from "../redux/userSlice";
 
 const Profile = () => {
   const { userLoading, allUsers } = useSelector((store) => store.user);
@@ -10,6 +10,8 @@ const Profile = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllUsers());
+
+    // eslint-disable-next-line
   }, []);
 
   if (userLoading) return <Loading />;
@@ -69,10 +71,13 @@ const Profile = () => {
                         </button>
                       ) : (
                         <>
-                          <button className="btn edit-btn btn-sm me-2">
+                          {/* <button className="btn edit-btn btn-sm me-2">
                             Forgot Password
-                          </button>
-                          <button className="btn btn-sm btn-danger">
+                          </button> */}
+                          <button
+                            className="btn btn-sm btn-danger"
+                            onClick={() => dispatch(deleteUser(item._id))}
+                          >
                             Delete
                           </button>
                         </>
