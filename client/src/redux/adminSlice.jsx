@@ -123,7 +123,7 @@ export const getLocation = createAsyncThunk(
   async (locationId, thunkAPI) => {
     try {
       const res = await authFetch.get(
-        `/location/locationServices/${locationId}`
+        `/report/locationServices/${locationId}`
       );
       return res.data;
     } catch (error) {

@@ -11,9 +11,8 @@ const router = express.Router();
 router.route("/addLocation/:id").post(addLocation);
 router
   .route("/locationServices/:id")
-  .get(getLocationServices)
   .patch(editLocation)
-  .delete(deleteLocation)
+  .delete(deleteLocation);
 router.route("/singleShipTo/:id").get(getSingleShipTo);
 
 export default router;
