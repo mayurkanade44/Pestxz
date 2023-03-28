@@ -199,7 +199,7 @@ export const generateServiceReport = async (req, res) => {
     data.map((item) => {
       worksheet.addRow({
         shipTo: item.shipTo,
-        time: item.createdAt.toString(),
+        time: new Date(item.createdAt).toLocaleString(undefined, {timeZone: 'Asia/Kolkata'}),
         floor: item.floor,
         location: item.location,
         service: item.services.serviceName,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { AddLocation } from "../components";
+import { AddLocation, Loading } from "../components";
 import { setEdit, singleClient } from "../redux/adminSlice";
 import { saveAs } from "file-saver";
 
@@ -9,7 +9,7 @@ const SingleClient = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const { singleClientDetails, singleClientLocations } = useSelector(
+  const { singleClientDetails, singleClientLocations, adminLoading } = useSelector(
     (store) => store.admin
   );
 
@@ -54,6 +54,7 @@ const SingleClient = () => {
 
   return (
     <div className="row">
+      {adminLoading && <Loading />}
       <div className="col-12 text-center">
         <h4>Client Name: {singleClientDetails.shipToName}</h4>
       </div>

@@ -11,7 +11,7 @@ import InputSelect from "./InputSelect";
 import AddUser from "./AddUser";
 import DeleteModal from "./DeleteModal";
 import Loading from "./Loading";
-
+import Footer from "./Footer";
 
 export {
   Navbar,
@@ -27,4 +27,5 @@ export {
   AddUser,
   DeleteModal,
   Loading,
+  Footer,
 };

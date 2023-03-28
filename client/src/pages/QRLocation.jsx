@@ -34,6 +34,10 @@ const QRLocation = () => {
       );
     }
 
+    navigator.geolocation.getCurrentPosition((position) =>
+      console.log(position.coords.latitude, position.coords.longitude)
+    );
+
     // eslint-disable-next-line
   }, [singleLocation]);
 
@@ -49,7 +53,7 @@ const QRLocation = () => {
     setInputField(data);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (inputField.filter((item) => item.action).length < 1) {
@@ -88,10 +92,11 @@ const QRLocation = () => {
     //   });
     // }
 
-    dispatch(addLocationRecord({ id, form }));
+    await dispatch(addLocationRecord({ id, form }));
+    setInputField([]);
   };
 
-  if (adminLoading) return <Loading />;
+  if (adminLoading || reportLoading) return <Loading />;
 
   return (
     <div className="location">
@@ -147,7 +152,11 @@ const QRLocation = () => {
                         name="image"
                         onChange={(e) => handleChange(index, e)}
                       />
-                      <span className="btn btn-sm">Image Upload</span>
+                      <span className="btn btn-sm">
+                        {inputField[index]?.image?.name
+                          ? "Uploaded"
+                          : "Image Upload"}
+                      </span>
                     </label>
                   </div>
                   <hr className="hr" />
@@ -157,7 +166,7 @@ const QRLocation = () => {
             <button
               type="submit"
               className="btn btn-success my-3"
-              disabled={reportLoading}
+              disabled={reportLoading || inputField.length === 0}
             >
               {reportLoading ? "Submitting..." : "Submit"}
             </button>

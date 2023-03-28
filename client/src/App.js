@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ProtectedRoute } from "./components";
+import { Footer, ProtectedRoute } from "./components";
 
 import {
   Landing,
@@ -47,6 +47,7 @@ function App() {
         />
         <Route path="*" element={<Error />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

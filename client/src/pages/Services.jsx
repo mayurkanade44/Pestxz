@@ -34,10 +34,9 @@ const Services = () => {
     dispatch(setEdit({ isEditing: false, locationId: "" }));
   };
 
-  if (adminLoading) return <Loading />;
-
   return (
     <div>
+      {adminLoading && <Loading />}
       {!open ? (
         <button className="btn btn-success " onClick={() => addNew()}>
           Add New Service
@@ -51,7 +50,6 @@ const Services = () => {
           toggle={setOpen}
         />
       )}
-
       <table className="table table-striped table-bordered border-primary mt-3">
         <thead>
           <tr>
