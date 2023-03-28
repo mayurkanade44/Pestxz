@@ -11,6 +11,7 @@ const initialState = {
   name: "",
   role: "",
   allUsers: [],
+  isEditing: false,
 };
 
 export const loginUser = createAsyncThunk(
@@ -57,7 +58,20 @@ export const deleteUser = createAsyncThunk(
   "user/delete",
   async (id, thunkAPI) => {
     try {
-      const res = await authFetch.delete(`/user/delete/${id}`);
+      const res = await authFetch.delete(`/user/update/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
+export const passwordChange = createAsyncThunk(
+  "user/changePassword",
+  async ({ id, password }, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/user/update/${id}`, { password });
       return res.data;
     } catch (error) {
       console.log(error);
@@ -82,6 +96,9 @@ const userSlice = createSlice({
       state.isSidebarOpen = false;
       localStorage.removeItem("user");
       toast.success("Successfully Logout");
+    },
+    setEditUser: (state, { payload }) => {
+      return { ...state, ...payload };
     },
   },
   extraReducers: (builder) => {
@@ -131,11 +148,32 @@ const userSlice = createSlice({
         state.userLoading = false;
         state.allUsers = payload.users;
         toast.success(payload.msg);
+      })
+      .addCase(passwordChange.pending, (state) => {
+        state.userLoading = true;
+      })
+      .addCase(passwordChange.fulfilled, (state, { payload }) => {
+        state.userLoading = false;
+        state.isEditing = false;
+        state.name = "";
+        state.password = "";
+        state.email = "";
+        state.role = "";
+        toast.success(payload.msg);
+      })
+      .addCase(passwordChange.rejected, (state, { payload }) => {
+        state.userLoading = false;
+        toast.success(payload);
       });
   },
 });
 
-export const { toggleSidebar, handleUser, clearUserValues, logoutUser } =
-  userSlice.actions;
+export const {
+  toggleSidebar,
+  handleUser,
+  clearUserValues,
+  logoutUser,
+  setEditUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddUser, Loading } from "../components";
-import { deleteUser, getAllUsers } from "../redux/userSlice";
+import { AddUser, DeleteModal, Loading } from "../components";
+import { deleteUser, getAllUsers, setEditUser } from "../redux/userSlice";
 
 const Profile = () => {
   const { userLoading, allUsers } = useSelector((store) => store.user);
@@ -13,6 +13,31 @@ const Profile = () => {
 
     // eslint-disable-next-line
   }, []);
+
+  const forgotPassword = (item) => {
+    dispatch(
+      setEditUser({
+        isEditing: true,
+        email: item.email,
+        name: item._id,
+        role: item.role,
+      })
+    );
+    setToggle(!toggle);
+  };
+
+  const addUser = () => {
+    setToggle(!toggle);
+    dispatch(
+      setEditUser({
+        isEditing: false,
+        email: "",
+        name: "",
+        role: "",
+        password: "",
+      })
+    );
+  };
 
   if (userLoading) return <Loading />;
 
@@ -65,22 +90,24 @@ const Profile = () => {
                       {item.role === "Admin" ? (
                         <button
                           className="btn btn-success btn-sm me-2"
-                          onClick={() => setToggle(!toggle)}
+                          onClick={() => addUser()}
                         >
                           Register User
                         </button>
                       ) : (
-                        <>
-                          {/* <button className="btn edit-btn btn-sm me-2">
-                            Forgot Password
-                          </button> */}
+                        <div className="d-flex">
                           <button
-                            className="btn btn-sm btn-danger"
-                            onClick={() => dispatch(deleteUser(item._id))}
+                            className="btn btn-sm me-2"
+                            onClick={() => forgotPassword(item)}
                           >
-                            Delete
+                            Forgot Password
                           </button>
-                        </>
+                          <DeleteModal
+                            handleDelete={() => dispatch(deleteUser(item._id))}
+                            name={item.name}
+                            title="User"
+                          />
+                        </div>
                       )}
                     </td>
                   </tr>

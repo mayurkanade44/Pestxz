@@ -8,6 +8,7 @@ const InputRow = ({
   labelText,
   placeholder,
   qr,
+  disabled
 }) => {
   return (
     <div className={qr ? "form-qr" : "form-row"}>
@@ -22,6 +23,7 @@ const InputRow = ({
         placeholder={placeholder}
         onChange={handleChange}
         className="form-input"
+        disabled={disabled}
       />
     </div>
   );

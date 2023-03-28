@@ -3,6 +3,7 @@ const router = express.Router();
 
 import {
   allUsers,
+  changePassword,
   deleteUser,
   loginUser,
   registerUser,
@@ -17,7 +18,8 @@ router
   .route("/allUser")
   .get(authenticateUser, authorizeUser("Admin"), allUsers);
 router
-  .route("/delete/:id")
-  .delete(authenticateUser, authorizeUser("Admin"), deleteUser);
+  .route("/update/:id")
+  .delete(authenticateUser, authorizeUser("Admin"), deleteUser)
+  .patch(authenticateUser, authorizeUser("Admin"), changePassword);
 
 export default router;

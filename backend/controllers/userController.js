@@ -104,3 +104,21 @@ export const deleteUser = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
+
+export const changePassword = async (req, res) => {
+  const { password } = req.body;
+  const { id } = req.params;
+  console.log(req.body);
+  try {
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    user.password = password;
+    await user.save();
+
+    res.status(200).json({ msg: "Password successfully updated" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
