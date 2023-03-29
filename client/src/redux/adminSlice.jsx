@@ -33,6 +33,19 @@ export const clientRegister = createAsyncThunk(
   }
 );
 
+export const updateClient = createAsyncThunk(
+  "admin/updateClient",
+  async ({ id, form }, thunkAPI) => {
+    try {
+      const res = await authFetch.patch(`/shipTo/client/${id}`, form);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 export const singleClient = createAsyncThunk(
   "admin/singleClient",
   async (id, thunkAPI) => {
@@ -122,9 +135,7 @@ export const getLocation = createAsyncThunk(
   "admin/getLocation",
   async (locationId, thunkAPI) => {
     try {
-      const res = await authFetch.get(
-        `/report/locationServices/${locationId}`
-      );
+      const res = await authFetch.get(`/report/locationServices/${locationId}`);
       return res.data;
     } catch (error) {
       console.log(error);
@@ -194,6 +205,23 @@ const adminSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(clientRegister.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(updateClient.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(updateClient.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.isEditing = false;
+        state.locationId = "";
+        state.shipToName = "";
+        state.shipToAddress = "";
+        state.shipToEmail = "";
+        state.shipToNumber = "";
+        toast.success(payload.msg);
+      })
+      .addCase(updateClient.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       })

@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { InputRow } from "../components";
-import { clientRegister, handleAdmin } from "../redux/adminSlice";
+import { clientRegister, handleAdmin, updateClient } from "../redux/adminSlice";
+import { capitalLetter } from "../utils/data";
 
 const RegisterClient = () => {
   const {
@@ -12,6 +14,8 @@ const RegisterClient = () => {
     shipToNumber,
     adminLoading,
     clientId,
+    locationId,
+    isEditing,
   } = useSelector((store) => store.admin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,19 +38,44 @@ const RegisterClient = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!shipToName || !shipToAddress)
+      return toast.error("Please provide client name");
+
+    if (isEditing) {
+      dispatch(
+        updateClient({
+          id: locationId,
+          form: {
+            shipToName: capitalLetter(shipToName),
+            shipToAddress,
+            shipToEmail,
+            shipToNumber,
+          },
+        })
+      );
+      return;
+    }
+
     dispatch(
-      clientRegister({ shipToName, shipToAddress, shipToEmail, shipToNumber })
+      clientRegister({
+        shipToName: capitalLetter(shipToName),
+        shipToAddress,
+        shipToEmail,
+        shipToNumber,
+      })
     );
   };
 
   return (
     <div className="add-client">
       <form className="form">
-        <h3 className="text-center">Client Registration</h3>
+        <h3 className="text-center">
+          {isEditing ? "Client Update" : "Add New Client"}
+        </h3>
         <div className="form-center">
           <InputRow
             type="text"
-            labelText="Client Name"
+            labelText="Client Name*"
             name="shipToName"
             value={shipToName}
             handleChange={handleClientInput}
@@ -66,7 +95,7 @@ const RegisterClient = () => {
             handleChange={handleClientInput}
           />
           <div>
-            <label htmlFor="cd">Client Address:</label>
+            <label htmlFor="cd">Client Address*</label>
             <textarea
               className="form-textarea"
               name="shipToAddress"
@@ -79,11 +108,11 @@ const RegisterClient = () => {
           <div className="btn-container">
             <button
               type="submit"
-              className="btn btn-block submit-btn"
+              className="btn btn-block submit-btn mb-2"
               onClick={handleSubmit}
               disabled={adminLoading}
             >
-              Add Client
+              {isEditing ? "Update Client" : "Add Client"}
             </button>
           </div>
         </div>

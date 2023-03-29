@@ -6,6 +6,8 @@ const Footer = () => {
         <a
           href="https://sat9.in/"
           style={{ color: "green", fontWeight: 600, paddingLeft: 2 }}
+          target="_blank"
+          rel="noreferrer"
         >
           SAT9
         </a>
