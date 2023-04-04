@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { InputRow } from "../components";
-import { clientRegister, handleAdmin, updateClient } from "../redux/adminSlice";
+import {
+  clientRegister,
+  handleAdmin,
+  updateClient,
+} from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
 
 const RegisterClient = () => {

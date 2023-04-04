@@ -15,6 +15,7 @@ const initialState = {
   singleClientLocations: [],
   singleLocation: {},
   companyServices: [],
+  companyProducts: [],
   isEditing: false,
   clientId: "",
   locationId: "",
@@ -254,7 +255,8 @@ const adminSlice = createSlice({
       .addCase(getCompanyServices.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
         state.allClients = payload.allShipTo;
-        state.companyServices = payload.services;
+        state.companyServices = payload.allServices;
+        state.companyProducts = payload.allProducts;
       })
       .addCase(editService.pending, (state) => {
         state.adminLoading = true;
