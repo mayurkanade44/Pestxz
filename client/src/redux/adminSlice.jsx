@@ -254,6 +254,7 @@ const adminSlice = createSlice({
       })
       .addCase(getCompanyServices.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
+        state.isEditing = false;
         state.allClients = payload.allShipTo;
         state.companyServices = payload.allServices;
         state.companyProducts = payload.allProducts;

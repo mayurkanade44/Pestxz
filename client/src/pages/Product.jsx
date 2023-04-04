@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AddService, InputRow, Loading } from "../components";
-import { getCompanyServices, setEdit } from "../redux/adminSlice";
+import { InputRow, Loading } from "../components";
+import { editService, getCompanyServices, setEdit } from "../redux/adminSlice";
 import { toast } from "react-toastify";
 import { addService } from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
@@ -14,13 +14,28 @@ const Product = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
 
+  useEffect(() => {
+    dispatch(getCompanyServices());
+  }, []);
+
   const openEdit = (item) => {
-    setOpen(true);
+    dispatch(setEdit({ isEditing: true, locationId: item._id }));
+    setName(item.productName);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name) return toast.error("Please provide Product Name");
+
+    if (isEditing) {
+      dispatch(
+        editService({
+          serviceId: locationId,
+          service: { productName: name },
+        })
+      );
+      return;
+    }
 
     dispatch(addService({ productName: capitalLetter(name) }));
     setName("");
@@ -79,11 +94,6 @@ const Product = () => {
                 >
                   Edit
                 </button>
-                {/* <DeleteModal
-                  handleDelete={() => dispatch(deleteService(item._id))}
-                  name={item.serviceName}
-                  title="Service"
-                /> */}
               </td>
             </tr>
           ))}
