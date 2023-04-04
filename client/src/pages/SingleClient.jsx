@@ -8,10 +8,9 @@ import { saveAs } from "file-saver";
 const SingleClient = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const { singleClientDetails, singleClientLocations, adminLoading } = useSelector(
-    (store) => store.admin
-  );
+  const [open, setOpen] = useState(true);
+  const { singleClientDetails, singleClientLocations, adminLoading } =
+    useSelector((store) => store.admin);
 
   const [alreadyService, setAlreadyService] = useState(null);
 
@@ -96,8 +95,9 @@ const SingleClient = () => {
                   <td>{item.location}</td>
                   <td>
                     {item.services?.map((item) => (
-                      <span className="me-1" key={item.serviceName}>
-                        {item.serviceName},
+                      <span className="me-1" key={item.service._id}>
+                        {item.service.serviceName || item.service.productName}
+                        ,
                       </span>
                     ))}
                   </td>

@@ -55,8 +55,6 @@ export const editService = async (req, res) => {
     const service = await Admin.findById(id);
     if (!service) return res.status(404).json({ msg: "Service not found" });
 
-    console.log(req.body);
-
     if (req.body.serviceOption) req.body.serviceOption.sort();
     await Admin.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,

@@ -18,7 +18,7 @@ export const addLocation = async (req, res) => {
 
     const ship = await ShipTo.findById(id);
     if (!ship)
-      return res.status(404).json({ msg: "Selected ship to not found" });
+      return res.status(404).json({ msg: "Selected client to not found" });
 
     req.body.shipTo = id;
     const loc = await Location.create(req.body);
@@ -90,7 +90,7 @@ export const deleteLocation = async (req, res) => {
   try {
     const location = await Location.findById(id);
     if (!location) return res.status(404).json({ msg: "Location not found" });
-    
+
     await location.deleteOne();
     return res.status(200).json({ msg: "Successfully deleted" });
   } catch (error) {
@@ -108,8 +108,8 @@ export const getSingleShipTo = async (req, res) => {
 
     const clientLocations = await Location.find({ shipTo: id })
       .populate({
-        path: "services",
-        select: "serviceName",
+        path: "services.service",
+        select: "serviceName productName",
       })
       .sort("floor");
     return res.status(200).json({ clientDetails, clientLocations });

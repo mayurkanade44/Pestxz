@@ -17,6 +17,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
   const {
     adminLoading,
     companyServices,
+    companyProducts,
     floor,
     location,
     isEditing,
@@ -24,10 +25,22 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
   } = useSelector((store) => store.admin);
 
   const [allServices, setAllServices] = useState(null);
+  const [allProducts, setAllProducts] = useState(null);
   const [addServices, setAddServices] = useState({
     name: [],
-    services: [],
+    services: [
+      {
+        service: "",
+        count: "",
+      },
+    ],
+    products: [],
   });
+  const [disable, setDisable] = useState({
+    service: false,
+    product: false,
+  });
+  const [count, setCount] = useState("");
 
   useEffect(() => {
     if (!location || isEditing) dispatch(getCompanyServices());
@@ -38,9 +51,10 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
   useEffect(() => {
     if (!adminLoading) {
       setAllServices(companyServices);
+      setAllProducts(companyProducts);
     }
     if (!location) {
-      setAddServices({ name: [], services: [] });
+      setAddServices({ name: [], services: [], products: [] });
     }
 
     // eslint-disable-next-line
@@ -48,7 +62,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
 
   useEffect(() => {
     if (alreadyService) {
-      setAddServices({ name: [], services: [] });
+      setAddServices({ name: [], services: [], products: [] });
       for (let item of alreadyService) {
         setAddServices((prev) => ({
           ...prev,
@@ -75,30 +89,59 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
     clearAll();
   };
 
-  const addService = (ser) => {
-    setAllServices((allServices) =>
-      allServices.filter((item) => item._id !== ser._id)
-    );
+  const addService = (ser, type) => {
+    if (type === "service") {
+      setDisable({ service: false, product: true });
 
-    const itemExists = addServices.name.some((item) => item._id === ser._id);
-    if (!itemExists) {
-      setAddServices((prev) => ({
-        ...prev,
-        name: [...prev.name, ser],
-        services: [...prev.services, ser._id],
-      }));
+      setAllServices((allServices) =>
+        allServices.filter((item) => item._id !== ser._id)
+      );
+
+      const itemExists = addServices.name.some((item) => item._id === ser._id);
+      if (!itemExists) {
+        setAddServices((prev) => ({
+          ...prev,
+          name: [...prev.name, ser],
+          services: [...prev.services, { service: ser._id }],
+        }));
+      }
+    } else {
+      setDisable({ service: true, product: false });
+
+      const itemExists = addServices.name.some((item) => item._id === ser._id);
+      if (!itemExists) {
+        setAddServices((prev) => ({
+          ...prev,
+          name: [ser],
+          services: [{ service: ser._id }],
+        }));
+      }
     }
   };
 
   const removeService = (ser) => {
-    setAddServices((prev) => ({
-      ...prev,
-      name: prev.name.filter((item) => item._id !== ser._id),
-      services: prev.services.filter((item) => item !== ser._id),
-    }));
+    if (disable.product) {
+      setAddServices((prev) => ({
+        ...prev,
+        name: prev.name.filter((item) => item._id !== ser._id),
+        services: prev.services.filter((item) => item !== ser._id),
+      }));
 
-    const itemExists = allServices.some((item) => item._id === ser._id);
-    if (!itemExists) setAllServices((allServices) => [...allServices, ser]);
+      const itemExists = allServices.some((item) => item._id === ser._id);
+      if (!itemExists) setAllServices((allServices) => [...allServices, ser]);
+    } else {
+      setAddServices((prev) => ({
+        ...prev,
+        name: prev.name.filter((item) => item._id !== ser._id),
+        services: prev.services.filter((item) => item !== ser._id),
+      }));
+
+      const itemExists = allProducts.some((item) => item._id === ser._id);
+      if (!itemExists) setAllProducts((allProducts) => [...allProducts, ser]);
+    }
+
+    if (addServices.name.length === 1)
+      setDisable({ service: false, product: false });
   };
 
   const handleLocationInput = (e) => {
@@ -112,6 +155,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
     e.preventDefault();
 
     let services = addServices.services;
+    if (count) services[0].count = count;
 
     if (!location || !floor || services.length < 1) {
       toast.error("Please fill all the details");
@@ -132,7 +176,11 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
     dispatch(
       addLocation({
         clientId,
-        location: { floor: capitalLetter(floor), location, services },
+        location: {
+          floor: capitalLetter(floor),
+          location,
+          services,
+        },
       })
     );
   };
@@ -149,21 +197,40 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
         <span></span>
       </div>
       {allServices && (
-        <>
-          <span className="service-span">Available Services :</span>
-          {allServices.map((item) => {
-            return (
-              <button
-                type="button"
-                className="btn btn-sm ms-2 mb-1"
-                key={item._id}
-                onClick={() => addService(item)}
-              >
-                {item.serviceName}
-              </button>
-            );
-          })}
-        </>
+        <div className="row">
+          <span className="service-span col-2">Available Services :</span>
+          <div className="col-10 ps-0">
+            {allServices.map((item) => {
+              return (
+                <button
+                  type="button"
+                  className="btn btn-sm me-2 mb-1"
+                  key={item._id}
+                  disabled={disable.service}
+                  onClick={() => addService(item, "service")}
+                >
+                  {item.serviceName}
+                </button>
+              );
+            })}
+          </div>
+          <span className="service-span col-2 mt-3">Available Products :</span>
+          <div className="col-10 mt-3 ps-0">
+            {allProducts.map((item) => {
+              return (
+                <button
+                  type="button"
+                  className="btn btn-sm btn-warning me-2 mb-1"
+                  key={item._id}
+                  disabled={disable.product}
+                  onClick={() => addService(item, "product")}
+                >
+                  {item.productName}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       )}
       <form className="row" onSubmit={handleSubmit}>
         <div className="col-md-4">
@@ -184,18 +251,29 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
             handleChange={handleLocationInput}
           />
         </div>
-        <div className="col-md-12 my-1">
-          <p className="mb-1">Added Services</p>
+        <div className="col-md-12 mt-3 mb-2">
+          <span className="mb-1 service-span">Added Services: </span>
           {addServices.name.map((item) => {
             return (
-              <button
-                type="button"
-                className="btn btn-sm btn-success me-2 mb-1"
-                key={item._id}
-                onClick={() => removeService(item)}
-              >
-                {item.serviceName}
-              </button>
+              <div key={item._id}>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-success ms-2"
+                  
+                  onClick={() => removeService(item)}
+                >
+                  {item.serviceName || item.productName}
+                </button>
+                {disable.service && (
+                  <input
+                    type="text"
+                    value={addServices.services.count}
+                    name="count"
+                    className="ms-2"
+                    onChange={(e) => setCount(e.target.value)}
+                  />
+                )}
+              </div>
             );
           })}
         </div>

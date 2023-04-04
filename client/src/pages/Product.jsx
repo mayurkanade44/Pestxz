@@ -11,11 +11,12 @@ const Product = () => {
     (store) => store.admin
   );
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
 
   useEffect(() => {
     dispatch(getCompanyServices());
+
+    // eslint-disable-next-line
   }, []);
 
   const openEdit = (item) => {
