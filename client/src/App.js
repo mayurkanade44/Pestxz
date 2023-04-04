@@ -14,6 +14,7 @@ import {
   Services,
   QRLocation,
   Profile,
+  Product,
 } from "./pages";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
         >
           <Route index element={<Stats />} />
           <Route path="services" element={<Services />} />
+          <Route path="products" element={<Product />} />
           <Route path="add-client" element={<RegisterClient />} />
           <Route path="report" element={<Report />} />
           <Route path="profile" element={<Profile />} />

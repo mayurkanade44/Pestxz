@@ -5,7 +5,8 @@ import { BsDatabaseAdd, BsHouseAddFill } from "react-icons/bs";
 
 export const links = [
   { id: 1, text: "Dashboard", path: "/dashboard", icon: <IoBarChartSharp /> },
-  { id: 2, text: "All Services", path: "services", icon: <BsDatabaseAdd /> },
+  { id: 2, text: "Services", path: "services", icon: <BsDatabaseAdd /> },
+  { id: 6, text: "Products", path: "products", icon: <BsDatabaseAdd /> },
   { id: 3, text: "Add Client", path: "add-client", icon: <BsHouseAddFill /> },
   { id: 4, text: "Report", path: "report", icon: <FaWpforms /> },
   { id: 5, text: "Profile", path: "profile", icon: <ImProfile /> },

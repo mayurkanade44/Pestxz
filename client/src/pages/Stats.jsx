@@ -31,7 +31,7 @@ const Stats = () => {
 
   return (
     <div className="add-client">
-      <div className="row">
+      <div className="row g-3">
         <h4 className="text-center">
           {allClients.length > 0 ? "All Clients" : "No Client"}
         </h4>
@@ -43,7 +43,9 @@ const Stats = () => {
                   index % 2 === 0 ? "border-success" : "border-warning"
                 }`}
               >
-                <div className="card-header" style={{fontSize:18}}>{item.shipToName}</div>
+                <div className="card-header" style={{ fontSize: 18 }}>
+                  {item.shipToName}
+                </div>
                 <div className="card-body py-2">
                   <div className="">
                     <p className="card-text mb-0">
