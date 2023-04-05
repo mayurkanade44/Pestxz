@@ -6,12 +6,13 @@ import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import ProtectedRoute from "./ProtectedRoute";
 import AddLocation from "./AddLocation";
-import AddService from "./AddService";
+import AddServiceProduct from "./AddServiceProduct";
 import InputSelect from "./InputSelect";
 import AddUser from "./AddUser";
 import DeleteModal from "./DeleteModal";
 import Loading from "./Loading";
 import Footer from "./Footer";
+import ServProdTable from "./ServProdTable";
 
 export {
   Navbar,
@@ -22,10 +23,11 @@ export {
   NavLinks,
   ProtectedRoute,
   AddLocation,
-  AddService,
+  AddServiceProduct,
   InputSelect,
   AddUser,
   DeleteModal,
   Loading,
   Footer,
+  ServProdTable,
 };

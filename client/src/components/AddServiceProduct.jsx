@@ -5,13 +5,12 @@ import { InputRow } from ".";
 import { addService, editService } from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
 
-const AddService = ({
+const AddServiceProduct = ({
   type,
   alreadyService,
   adminLoading,
   isEditing,
   id,
-  toggle,
 }) => {
   const dispatch = useDispatch();
   const [service, setService] = useState({
@@ -80,28 +79,15 @@ const AddService = ({
 
   return (
     <div className="add-client">
-      <div className="back">
-        <button className="btn btn-dark" onClick={() => toggle(false)}>
-          Back
-        </button>
-        <h3 className="text-center ">
-          {isEditing
-            ? type === "Product"
-              ? "Edit Product"
-              : "Edit Service"
-            : type === "Product"
-            ? "Add Product"
-            : "Add Service"}
-        </h3>
-        <span></span>
-      </div>
+      <h3 className="text-center ">
+        {isEditing ? `Edit ${type}` : `Add ${type}`}
+      </h3>
       <form className="form" onSubmit={handleSubmit}>
         <div className="row">
           <div className="col-md-4">
             <InputRow
               type="text"
-              labelText={type === "Product" ? "Product Name" : "Service Name"}
-              name="name"
+              labelText={`${type} Name`}
               value={service.name}
               handleChange={(e) =>
                 setService((prev) => ({ ...prev, name: e.target.value }))
@@ -111,8 +97,7 @@ const AddService = ({
           <div className="col-md-4">
             <InputRow
               type="text"
-              labelText={`Application Options`}
-              name="shipToAddress"
+              labelText="Application Options"
               value={option}
               handleChange={(e) => setOption(e.target.value)}
             />
@@ -147,14 +132,9 @@ const AddService = ({
             <button
               type="submit"
               className="btn btn-success "
-              onClick={handleSubmit}
               disabled={adminLoading}
             >
-              {isEditing
-                ? "Update"
-                : type === "Product"
-                ? "Add Product"
-                : "Add Service"}
+              {isEditing ? "Update" : `Add ${type}`}
             </button>
           </div>
         </div>
@@ -162,4 +142,4 @@ const AddService = ({
     </div>
   );
 };
-export default AddService;
+export default AddServiceProduct;
