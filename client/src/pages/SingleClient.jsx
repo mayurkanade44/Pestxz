@@ -79,7 +79,7 @@ const SingleClient = () => {
                   Floor
                 </th>
                 <th className="text-center">Location</th>
-                <th className="text-center">Services</th>
+                <th className="text-center">Services / Products</th>
                 <th style={{ width: 110 }} className="text-center">
                   QR Code
                 </th>
@@ -96,7 +96,8 @@ const SingleClient = () => {
                   <td>
                     {item.services?.map((item) => (
                       <span className="me-1" key={item.service._id}>
-                        {item.service.serviceName || item.service.productName}
+                        {item.service.serviceName ||
+                          `${item.service.productName} - ${item.count}`}
                         ,
                       </span>
                     ))}

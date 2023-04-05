@@ -63,14 +63,26 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
   useEffect(() => {
     if (alreadyService) {
       setAddServices({ name: [], services: [], products: [] });
+      const service = allServices.some(
+        (ser) => ser._id === alreadyService[0].service._id
+      );
+      if (service) setDisable({ service: false, product: true });
+      else setDisable({ service: true, product: false });
+
       for (let item of alreadyService) {
         setAddServices((prev) => ({
           ...prev,
-          name: [...prev.name, item],
-          services: [...prev.services, item._id],
+          name: [...prev.name, item.service],
+          services: [
+            ...prev.services,
+            { service: item.service._id, count: item.count },
+          ],
         }));
+        setCount(item.count)
       }
     }
+
+    // eslint-disable-next-line
   }, [alreadyService]);
 
   const clearAll = () => {
@@ -124,7 +136,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
       setAddServices((prev) => ({
         ...prev,
         name: prev.name.filter((item) => item._id !== ser._id),
-        services: prev.services.filter((item) => item !== ser._id),
+        services: prev.services.filter((item) => item.service !== ser._id),
       }));
 
       const itemExists = allServices.some((item) => item._id === ser._id);
@@ -133,7 +145,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
       setAddServices((prev) => ({
         ...prev,
         name: prev.name.filter((item) => item._id !== ser._id),
-        services: prev.services.filter((item) => item !== ser._id),
+        services: prev.services.filter((item) => item.service !== ser._id),
       }));
 
       const itemExists = allProducts.some((item) => item._id === ser._id);
@@ -183,6 +195,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
         },
       })
     );
+    setDisable({ service: false, product: false });
   };
 
   return (
@@ -259,7 +272,6 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
                 <button
                   type="button"
                   className="btn btn-sm btn-success ms-2"
-                  
                   onClick={() => removeService(item)}
                 >
                   {item.serviceName || item.productName}
@@ -267,9 +279,9 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
                 {disable.service && (
                   <input
                     type="text"
-                    value={addServices.services.count}
+                    value={count}
                     name="count"
-                    className="ms-2"
+                    className="ms-2 ps-2"
                     onChange={(e) => setCount(e.target.value)}
                   />
                 )}
