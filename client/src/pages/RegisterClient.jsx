@@ -6,6 +6,7 @@ import { InputRow } from "../components";
 import {
   clientRegister,
   handleAdmin,
+  setEdit,
   updateClient,
 } from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
@@ -29,10 +30,14 @@ const RegisterClient = () => {
       setTimeout(() => {
         navigate(`/dashboard/client/${clientId}`);
       }, 1000);
+      setTimeout(() => {
+        dispatch(setEdit({ clientId: "" }));
+      }, 2000);
     }
 
     // eslint-disable-next-line
   }, [clientId]);
+
   const handleClientInput = (e) => {
     let name = e.target.name,
       value = e.target.value;
@@ -72,7 +77,7 @@ const RegisterClient = () => {
 
   return (
     <div className="add-client">
-      <form className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <h3 className="text-center">
           {isEditing ? "Client Update" : "Add New Client"}
         </h3>
@@ -113,7 +118,6 @@ const RegisterClient = () => {
             <button
               type="submit"
               className="btn btn-block submit-btn mb-2"
-              onClick={handleSubmit}
               disabled={adminLoading}
             >
               {isEditing ? "Update Client" : "Add Client"}

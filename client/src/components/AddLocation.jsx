@@ -12,7 +12,7 @@ import { DeleteModal, InputRow } from ".";
 import { capitalLetter } from "../utils/data";
 import { toast } from "react-toastify";
 
-const AddLocation = ({ clientId, alreadyService, toggle }) => {
+const AddLocation = ({ clientId, alreadyService, toggle, ser }) => {
   const dispatch = useDispatch();
   const {
     adminLoading,
@@ -63,10 +63,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
   useEffect(() => {
     if (alreadyService) {
       setAddServices({ name: [], services: [], products: [] });
-      const service = allServices.some(
-        (ser) => ser._id === alreadyService[0].service._id
-      );
-      if (service) setDisable({ service: false, product: true });
+      if (ser) setDisable({ service: false, product: true });
       else setDisable({ service: true, product: false });
 
       for (let item of alreadyService) {
@@ -94,6 +91,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
         locationId: "",
       })
     );
+    setDisable({ service: false, product: false });
   };
 
   const handleDelete = () => {
@@ -169,7 +167,12 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
     let services = addServices.services;
     if (count) services[0].count = count;
 
-    if (!location || !floor || services.length < 1) {
+    if (
+      !location ||
+      !floor ||
+      services.length < 1 ||
+      (disable.service && !count)
+    ) {
       toast.error("Please fill all the details");
       return;
     }
@@ -204,7 +207,10 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
   return (
     <div className="add-client mb-3">
       <div className="back">
-        <button className="btn btn-dark" onClick={() => toggle(false)}>
+        <button
+          className="btn btn-dark"
+          onClick={() => toggle({ open: false })}
+        >
           Back
         </button>
         <h3 className="text-center ">
@@ -220,7 +226,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
               return (
                 <button
                   type="button"
-                  className="btn btn-sm me-2 mb-1"
+                  className="btn btn-sm btn-info me-2 mb-1"
                   key={item._id}
                   disabled={disable.service}
                   onClick={() => addService(item, "service")}
@@ -236,7 +242,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
               return (
                 <button
                   type="button"
-                  className="btn btn-sm btn-warning me-2 mb-1"
+                  className="btn btn-sm btn-secondary me-2 mb-1"
                   key={item._id}
                   disabled={disable.product}
                   onClick={() => addService(item, "product")}
@@ -267,31 +273,33 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
             handleChange={handleLocationInput}
           />
         </div>
-        <div className="col-md-12 mt-3 mb-2">
-          <span className="mb-1 service-span">Added Services: </span>
-          {addServices.name.map((item) => {
-            return (
-              <div key={item._id}>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-success ms-2"
-                  onClick={() => removeService(item)}
-                >
-                  {item.serviceName || item.productName}
-                </button>
-                {disable.service && (
-                  <input
-                    type="text"
-                    value={count}
-                    name="count"
-                    className="ms-2 ps-2"
-                    onChange={(e) => setCount(e.target.value)}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <div className="col-2"></div>
+        <span className="my-3 col-auto service-span">Added Services: </span>
+        {addServices.name.map((item) => {
+          return (
+            <div key={item._id} className="col-auto my-3">
+              <button
+                type="button"
+                className="btn btn-sm btn-success"
+                onClick={() => removeService(item)}
+              >
+                {item.serviceName || item.productName}
+              </button>
+              {disable.service && (
+                <input
+                  type="text"
+                  value={count}
+                  name="count"
+                  placeholder="Product Count"
+                  className="ms-2 ps-2"
+                  style={{ width: 130 }}
+                  onChange={(e) => setCount(e.target.value)}
+                />
+              )}
+            </div>
+          );
+        })}
+
         <div className="col-md-12">
           <div className="d-flex justify-content-center">
             <button

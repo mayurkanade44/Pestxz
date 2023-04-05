@@ -8,11 +8,16 @@ import { saveAs } from "file-saver";
 const SingleClient = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(true);
   const { singleClientDetails, singleClientLocations, adminLoading } =
     useSelector((store) => store.admin);
 
+  const [toggle, setToggle] = useState({
+    open: false,
+    ser: false,
+  });
   const [alreadyService, setAlreadyService] = useState(null);
+
+  const { open, ser } = toggle;
 
   useEffect(() => {
     dispatch(singleClient(id));
@@ -33,12 +38,15 @@ const SingleClient = () => {
         locationId: item._id,
       })
     );
-    setOpen(true);
+  
+    if (item.services[0].service.serviceName)
+      setToggle({ open: true, ser: true });
+    else setToggle({ open: true, ser: false });
     setAlreadyService(item.services);
   };
 
   const addNew = () => {
-    setOpen(!open);
+    setToggle({ open: !open });
     setAlreadyService(null);
     dispatch(
       setEdit({
@@ -67,7 +75,8 @@ const SingleClient = () => {
         <AddLocation
           clientId={id}
           alreadyService={alreadyService}
-          toggle={setOpen}
+          toggle={setToggle}
+          ser={ser}
         />
       )}
       {singleClientLocations && (

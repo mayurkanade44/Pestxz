@@ -198,7 +198,6 @@ const adminSlice = createSlice({
       .addCase(clientRegister.fulfilled, (state, { payload }) => {
         state.adminLoading = false;
         state.clientId = payload.id;
-        state.redirect = true;
         state.shipToName = "";
         state.shipToAddress = "";
         state.shipToEmail = "";
