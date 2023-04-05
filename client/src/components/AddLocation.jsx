@@ -78,7 +78,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
             { service: item.service._id, count: item.count },
           ],
         }));
-        setCount(item.count)
+        setCount(item.count);
       }
     }
 
@@ -182,6 +182,8 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
           location: { floor: capitalLetter(floor), location, services },
         })
       );
+      setDisable({ service: false, product: false });
+      setCount("");
       return;
     }
 
@@ -195,6 +197,7 @@ const AddLocation = ({ clientId, alreadyService, toggle }) => {
         },
       })
     );
+    setCount("");
     setDisable({ service: false, product: false });
   };
 

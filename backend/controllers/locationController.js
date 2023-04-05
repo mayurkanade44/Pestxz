@@ -6,11 +6,12 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { createCanvas, loadImage } from "canvas";
+import mongoose from "mongoose";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const addLocation = async (req, res) => {
-  const { floor, location, count } = req.body;
+  const { floor, location, count, services } = req.body;
   const { id } = req.params;
   try {
     if (!floor || !location)
@@ -19,6 +20,16 @@ export const addLocation = async (req, res) => {
     const ship = await ShipTo.findById(id);
     if (!ship)
       return res.status(404).json({ msg: "Selected client to not found" });
+
+    if (services[0].count) {
+      const loc1 = await Location.find({
+        shipTo: id,
+        "services.service": services[0].service,
+        "services.count": services[0].count,
+      });
+      if (loc1.length > 0)
+        return res.status(400).json({ msg: "Product count already exist" });
+    }
 
     req.body.shipTo = id;
     const loc = await Location.create(req.body);
@@ -68,10 +79,21 @@ export const getLocationServices = async (req, res) => {
 };
 
 export const editLocation = async (req, res) => {
+  const { services } = req.body;
   const { id } = req.params;
   try {
     const loc = await Location.findById(id);
     if (!loc) return res.status(404).json({ msg: "Location not found" });
+
+    if (services[0].count) {
+      const loc1 = await Location.find({
+        shipTo: loc.shipTo,
+        "services.service": services[0].service,
+        "services.count": services[0].count,
+      });
+      if (loc1.length > 0)
+        return res.status(400).json({ msg: "Product count already exist" });
+    }
 
     await Location.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,
@@ -112,6 +134,7 @@ export const getSingleShipTo = async (req, res) => {
         select: "serviceName productName",
       })
       .sort("floor");
+
     return res.status(200).json({ clientDetails, clientLocations });
   } catch (error) {
     console.log(error);
