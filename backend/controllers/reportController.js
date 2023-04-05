@@ -188,7 +188,7 @@ export const generateServiceReport = async (req, res) => {
       { header: "Date/Time", key: "time" },
       { header: "Floor", key: "floor" },
       { header: "Location", key: "location" },
-      { header: "Service", key: "service" },
+      { header: "Service/Product", key: "service" },
       { header: "Activity", key: "activity" },
       { header: "Value", key: "value" },
       { header: "Operator Comment", key: "comment" },
@@ -199,7 +199,9 @@ export const generateServiceReport = async (req, res) => {
     data.map((item) => {
       worksheet.addRow({
         shipTo: item.shipTo,
-        time: new Date(item.createdAt).toLocaleString(undefined, {timeZone: 'Asia/Kolkata'}),
+        time: new Date(item.createdAt).toLocaleString(undefined, {
+          timeZone: "Asia/Kolkata",
+        }),
         floor: item.floor,
         location: item.location,
         service: item.services.serviceName,

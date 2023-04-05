@@ -69,10 +69,9 @@ const Report = () => {
     );
   };
 
-  if (reportLoading) return <Loading />;
-
   return (
     <div className="add-client">
+      {reportLoading && <Loading />}
       <form className="form">
         <h4 className="text-center">Report Generation Form</h4>
         <div className="form-center">
@@ -124,7 +123,7 @@ const Report = () => {
             onClick={handleSubmit}
             disabled={reportLoading}
           >
-            {reportLoading ? "Creating Report..." : "Generate Report"}
+            {reportLoading ? "Generating Report..." : "Generate Report"}
           </button>
           {download && (
             <button

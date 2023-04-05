@@ -190,10 +190,10 @@ ul {
   background: var(--green);
   color: var(--white);
 }
-.btn-warning {
+.btn-secondary {
   background: var(--grey-500);
 }
-.btn-warning:hover {
+.btn-secondary:hover {
   background: black;
   color: white;
 }

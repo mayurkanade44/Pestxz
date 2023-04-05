@@ -25,7 +25,9 @@ const QRLocation = () => {
       singleLocation.services?.map((item) =>
         inputField.push({
           id: item._id,
-          serviceName: item.service.serviceName,
+          serviceName:
+            item.service.serviceName ||
+            `${item.service.productName} - ${item.count}`,
           action: "",
           value: "",
           comment: "",
@@ -115,7 +117,8 @@ const QRLocation = () => {
                   <div className="col-8">
                     <InputSelect
                       labelText={
-                        item.service.serviceName || item.service.productName
+                        item.service.serviceName ||
+                        `${item.service.productName} - ${item.count}`
                       }
                       name="action"
                       qr={true}
