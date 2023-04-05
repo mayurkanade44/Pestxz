@@ -63,8 +63,8 @@ export const getLocationServices = async (req, res) => {
   const { id } = req.params;
   try {
     const location = await Location.findById(id).populate({
-      path: "services",
-      select: "serviceName serviceOption",
+      path: "services.service",
+      select: "serviceName serviceOption productName",
     });
     if (!location)
       return res

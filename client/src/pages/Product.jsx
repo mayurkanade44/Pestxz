@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { InputRow, Loading } from "../components";
+import { AddService, InputRow, Loading } from "../components";
 import { editService, getCompanyServices, setEdit } from "../redux/adminSlice";
 import { toast } from "react-toastify";
 import { addService } from "../redux/adminSlice";
@@ -11,7 +11,7 @@ const Product = () => {
     (store) => store.admin
   );
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
+  const [alreadyService, setAlreadyService] = useState(null);
 
   useEffect(() => {
     dispatch(getCompanyServices());
@@ -20,59 +20,26 @@ const Product = () => {
   }, []);
 
   const openEdit = (item) => {
-    dispatch(setEdit({ isEditing: true, locationId: item._id }));
-    setName(item.productName);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!name) return toast.error("Please provide Product Name");
-
-    if (isEditing) {
-      dispatch(
-        editService({
-          serviceId: locationId,
-          service: { productName: name },
-        })
-      );
-      return;
-    }
-
-    dispatch(addService({ productName: capitalLetter(name) }));
-    setName("");
+    
+    dispatch(
+      setEdit({
+        locationId: item._id,
+        isEditing: true,
+      })
+    );
+    setAlreadyService({ name: item.productName, options: item.serviceOption });
   };
 
   return (
     <div>
       {adminLoading && <Loading />}
-      <div className="add-client">
-        <h3 className="text-center ">
-          {isEditing ? "Edit Product" : "Add Product"}
-        </h3>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-md-4">
-              <InputRow
-                type="text"
-                labelText="Product Name"
-                name="name"
-                value={name}
-                handleChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="col-md-4">
-              <button
-                type="submit"
-                className="btn btn-success mt-5"
-                onClick={handleSubmit}
-                disabled={adminLoading}
-              >
-                {isEditing ? "Update Product" : "Add Product"}
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
+      <AddService
+        type="Product"
+        alreadyService={alreadyService}
+        adminLoading={adminLoading}
+        isEditing={isEditing}
+        id={locationId}
+      />
       <table className="table table-striped table-bordered border-primary mt-3">
         <thead>
           <tr>

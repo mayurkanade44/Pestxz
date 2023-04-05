@@ -6,6 +6,7 @@ import { addService, editService } from "../redux/adminSlice";
 import { capitalLetter } from "../utils/data";
 
 const AddService = ({
+  type,
   alreadyService,
   adminLoading,
   isEditing,
@@ -53,26 +54,27 @@ const AddService = ({
       return;
     }
 
+    const form = {};
+    if (type === "Product") {
+      form.productName = capitalLetter(service.name);
+      form.serviceOption = service.applications;
+    } else {
+      form.serviceName = capitalLetter(service.name);
+      form.serviceOption = service.applications;
+    }
+
     if (isEditing) {
       dispatch(
         editService({
           serviceId: id,
-          service: {
-            serviceName: capitalLetter(service.name),
-            serviceOption: service.applications,
-          },
+          service: form,
         })
       );
       setService({ name: "", applications: [] });
       return;
     }
 
-    dispatch(
-      addService({
-        serviceName: capitalLetter(service.name),
-        serviceOption: service.applications,
-      })
-    );
+    dispatch(addService(form));
     setService({ name: "", applications: [] });
   };
 
@@ -83,7 +85,13 @@ const AddService = ({
           Back
         </button>
         <h3 className="text-center ">
-          {isEditing ? "Edit Service" : "Add Service"}
+          {isEditing
+            ? type === "Product"
+              ? "Edit Product"
+              : "Edit Service"
+            : type === "Product"
+            ? "Add Product"
+            : "Add Service"}
         </h3>
         <span></span>
       </div>
@@ -92,7 +100,7 @@ const AddService = ({
           <div className="col-md-4">
             <InputRow
               type="text"
-              labelText="Service Name"
+              labelText={type === "Product" ? "Product Name" : "Service Name"}
               name="name"
               value={service.name}
               handleChange={(e) =>
@@ -142,7 +150,11 @@ const AddService = ({
               onClick={handleSubmit}
               disabled={adminLoading}
             >
-              {isEditing ? "Save" : "Add Service"}
+              {isEditing
+                ? "Update"
+                : type === "Product"
+                ? "Add Product"
+                : "Add Service"}
             </button>
           </div>
         </div>

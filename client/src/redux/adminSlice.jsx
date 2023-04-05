@@ -62,9 +62,9 @@ export const singleClient = createAsyncThunk(
 
 export const addService = createAsyncThunk(
   "admin/addService",
-  async (service, thunkAPI) => {
+  async (form, thunkAPI) => {
     try {
-      const res = await authFetch.post("/admin/service", service);
+      const res = await authFetch.post("/admin/service", form);
       thunkAPI.dispatch(getCompanyServices());
       return res.data;
     } catch (error) {

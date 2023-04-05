@@ -43,6 +43,7 @@ const Services = () => {
         </button>
       ) : (
         <AddService
+          type="Service"
           alreadyService={alreadyService}
           adminLoading={adminLoading}
           isEditing={isEditing}

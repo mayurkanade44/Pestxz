@@ -25,7 +25,7 @@ const QRLocation = () => {
       singleLocation.services?.map((item) =>
         inputField.push({
           id: item._id,
-          serviceName: item.serviceName,
+          serviceName: item.service.serviceName,
           action: "",
           value: "",
           comment: "",
@@ -114,13 +114,15 @@ const QRLocation = () => {
                 <div key={item._id} className="row">
                   <div className="col-8">
                     <InputSelect
-                      labelText={item.serviceName}
+                      labelText={
+                        item.service.serviceName || item.service.productName
+                      }
                       name="action"
                       qr={true}
                       id={item._id}
                       value={inputField.action}
                       handleChange={(e) => handleChange(index, e)}
-                      list={["Select", ...item.serviceOption]}
+                      list={["Select", ...item.service.serviceOption]}
                     />
                   </div>
                   <div className="col-4">
