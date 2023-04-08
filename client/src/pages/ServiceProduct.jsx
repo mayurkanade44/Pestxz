@@ -14,13 +14,21 @@ const ServiceProduct = () => {
   } = useSelector((store) => store.admin);
   const { id } = useParams();
   const dispatch = useDispatch();
-  const [alreadyService, setAlreadyService] = useState(null);
-  const [type, setType] = useState("");
+  const [alreadyService, setAlreadyService] = useState({
+    name: "",
+    options: [],
+    type: "",
+  });
+
+  const { type } = alreadyService;
 
   useEffect(() => {
     dispatch(getCompanyServices());
-    if (id === "products") setType("Product");
-    else setType("Service");
+    dispatch(setEdit({ isEditing: false }));
+
+    if (id === "products")
+      setAlreadyService({ name: "", options: [], type: "Product" });
+    else setAlreadyService({ name: "", options: [], type: "Service" });
 
     // eslint-disable-next-line
   }, [id]);
@@ -32,10 +40,11 @@ const ServiceProduct = () => {
         isEditing: true,
       })
     );
-    setAlreadyService({
+    setAlreadyService((prev) => ({
+      ...prev,
       name: item.serviceName || item.productName,
       options: item.serviceOption,
-    });
+    }));
   };
 
   return (

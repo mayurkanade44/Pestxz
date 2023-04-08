@@ -571,6 +571,7 @@ ul {
     background: var(--grey-50);
     padding-left: 3rem;
     color: var(--grey-900);
+    font-weight: 600;
   }
   .big-bar .nav-link:hover .icon {
     color: var(--primary-500);
