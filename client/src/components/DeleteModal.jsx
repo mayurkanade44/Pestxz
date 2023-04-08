@@ -32,14 +32,19 @@ const DeleteModal = ({ handleDelete, name, title }) => {
             <div className="modal-body">
               Are you sure you want to
               <b className="ms-1">
-                Delete {name} {title}
+                Delete {name} {title} ?
+                {title === "Client" && (
+                  <p className="text-danger mb-0">
+                    {`This will also delete the all the ${name} locations and
+                    related data.`}
+                  </p>
+                )}
               </b>
-              ?
             </div>
             <div className="modal-footer d-flex justify-content-center">
               <button
                 type="button"
-                className="btn btn-danger btn-lg"
+                className="btn btn-danger btn-lg pt-1"
                 data-bs-dismiss="modal"
                 onClick={handleDelete}
               >

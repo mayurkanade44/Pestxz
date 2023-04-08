@@ -1,4 +1,6 @@
 import ShipTo from "../models/ShipTo.js";
+import Report from "../models/Report.js";
+import Location from "../models/Location.js";
 
 export const addShipTo = async (req, res) => {
   const { shipToName, shipToAddress } = req.body;
@@ -55,9 +57,11 @@ export const deleteShipTo = async (req, res) => {
     if (!client)
       return res.status(404).json({ msg: "Selected client not found" });
 
-    await ShipTo.deleteMany({ _id: id });
+    await Report.deleteMany({ shipTo: id });
+    await Location.deleteMany({ shipTo: id });
+    await client.deleteOne();
 
-    return res.status(200).json({ msg: "Successfully deleted" });
+    return res.status(200).json({ msg: "Client Successfully deleted" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });

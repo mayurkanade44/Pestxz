@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { InputRow } from "../components";
+import { DeleteModal, InputRow } from "../components";
 import {
   clientRegister,
+  deleteClient,
   handleAdmin,
   setEdit,
   updateClient,
@@ -42,6 +43,10 @@ const RegisterClient = () => {
     let name = e.target.name,
       value = e.target.value;
     dispatch(handleAdmin({ name, value }));
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteClient(locationId));
   };
 
   const handleSubmit = async (e) => {
@@ -122,6 +127,15 @@ const RegisterClient = () => {
             >
               {isEditing ? "Update Client" : "Add Client"}
             </button>
+            {isEditing && (
+              <>
+                <DeleteModal
+                  handleDelete={() => handleDelete()}
+                  name={shipToName}
+                  title="Client"
+                />
+              </>
+            )}
           </div>
         </div>
       </form>

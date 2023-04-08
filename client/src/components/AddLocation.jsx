@@ -299,7 +299,6 @@ const AddLocation = ({ clientId, alreadyService, toggle, ser }) => {
             </div>
           );
         })}
-
         <div className="col-md-12">
           <div className="d-flex justify-content-center">
             <button

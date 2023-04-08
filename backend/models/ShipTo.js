@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const ShipToSchema = new mongoose.Schema(
   {
     shipToName: { type: String, required: true },
@@ -14,5 +15,7 @@ const ShipToSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
 
 export default mongoose.model("ShipTo", ShipToSchema);

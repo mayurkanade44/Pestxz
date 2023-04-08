@@ -60,6 +60,19 @@ export const singleClient = createAsyncThunk(
   }
 );
 
+export const deleteClient = createAsyncThunk(
+  "admin/deleteClient",
+  async (id, thunkAPI) => {
+    try {
+      const res = await authFetch.delete(`/shipTo/client/${id}`);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 export const addService = createAsyncThunk(
   "admin/addService",
   async (form, thunkAPI) => {
@@ -234,6 +247,23 @@ const adminSlice = createSlice({
         state.singleClientLocations = payload.clientLocations;
       })
       .addCase(singleClient.rejected, (state, { payload }) => {
+        state.adminLoading = false;
+        toast.error(payload);
+      })
+      .addCase(deleteClient.pending, (state) => {
+        state.adminLoading = true;
+      })
+      .addCase(deleteClient.fulfilled, (state, { payload }) => {
+        state.adminLoading = false;
+        state.isEditing = false;
+        state.locationId = "";
+        state.shipToName = "";
+        state.shipToAddress = "";
+        state.shipToEmail = "";
+        state.shipToNumber = "";
+        toast.success(payload.msg);
+      })
+      .addCase(deleteClient.rejected, (state, { payload }) => {
         state.adminLoading = false;
         toast.error(payload);
       })
