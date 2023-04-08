@@ -39,11 +39,21 @@ app.use(express.json());
 app.use(fileUpload({ useTempFiles: true }));
 
 app.use("/api/user", userRouter);
-app.use("/api/company", authenticateUser, authorizeUser("Admin"), companyRouter);
+app.use(
+  "/api/company",
+  authenticateUser,
+  authorizeUser("Admin"),
+  companyRouter
+);
 app.use("/api/shipTo", authenticateUser, authorizeUser("Admin"), shipToRouter);
 app.use("/api/admin", authenticateUser, authorizeUser("Admin"), adminRouter);
-app.use("/api/location", authenticateUser,authorizeUser("Admin"), locationRouter);
-app.use("/api/report", authenticateUser, reportRouter);
+app.use(
+  "/api/location",
+  authenticateUser,
+  authorizeUser("Admin"),
+  locationRouter
+);
+app.use("/api/report", reportRouter);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
