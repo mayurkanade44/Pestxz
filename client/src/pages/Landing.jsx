@@ -47,7 +47,7 @@ const Landing = () => {
         <img src={main} alt="job hunt" className="img main-img" />
         <div className="info">
           <h1 className="text-center">
-            Pest <span>Tracking</span> Portal
+            Service <span>Tracking</span> Portal
           </h1>
           <form action="submit" className="form" onSubmit={handleSubmit}>
             <InputRow

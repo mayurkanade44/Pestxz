@@ -21,7 +21,14 @@ const LocationSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { toJSON: { virtuals: true }, toObject: { virtuals: true }, timestamps: true }
 );
+
+LocationSchema.virtual("reports", {
+  ref: "Report",
+  localField: "_id",
+  foreignField: "location",
+  justOne: false,
+});
 
 export default mongoose.model("Location", LocationSchema);
