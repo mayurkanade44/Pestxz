@@ -25,7 +25,6 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.0",
     "morgan": "^1.10.0",
-    "pdfkit": "^0.13.0",
     "qrcode": "^1.5.1"
   },
   "devDependencies": {

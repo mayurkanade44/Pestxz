@@ -53,7 +53,7 @@ app.use(
   authorizeUser("Admin"),
   locationRouter
 );
-app.use("/api/report", reportRouter);
+app.use("/api/report", authenticateUser, reportRouter);
 
 // app.get("*", (req, res) => {
 //   res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));

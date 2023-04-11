@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import exceljs from "exceljs";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import PDFDocument from "pdfkit";
 
 export const addRecord = async (req, res) => {
   const { action } = req.body;
@@ -245,25 +244,40 @@ export const generateServiceReport = async (req, res) => {
 
 export const weeklyReport = async (req, res) => {
   try {
-    const data = await Report.aggregate([
-      // {
-      //   $lookup: {
-      //     from: "shiptos",
-      //     localField: "shipTo",
-      //     foreignField: "_id",
-      //     as: "shipTo",
-      //   },
-      // },
-      // {
-      //   $unwind: "$shipTo",
-      // },
+    const finalData = [];
+
+    const data = await Report.find({
+      shipTo: "642d62c33fa94fb3a9b46e3c",
+      createdAt: { $gte: new Date("2023-04-08"), $lte: new Date("2023-04-12") },
+    });
+
+    const allLocations = await Location.find({
+      shipTo: "642d62c33fa94fb3a9b46e3c",
+    })
+      .populate({
+        path: "reports services.service",
+        select: "reportData createdAt serviceName productName",
+      })
+      .select("floor location services.count");
+
+    const data1 = await Report.aggregate([
+      {
+        $lookup: {
+          from: "shiptos",
+          localField: "shipTo",
+          foreignField: "_id",
+          as: "shipTo",
+        },
+      },
+      {
+        $unwind: "$shipTo",
+      },
       {
         $match: {
-          shipTo: new mongoose.Types.ObjectId("642d62c33fa94fb3a9b46e3c"),
+          "shipTo._id": new mongoose.Types.ObjectId("642d62c33fa94fb3a9b46e3c"),
         },
       },
       { $unwind: "$reportData" },
-      { $match: { "reportData.id": "64311499688d8d09b01ee077" } },
       {
         $lookup: {
           from: "locations",
@@ -275,95 +289,62 @@ export const weeklyReport = async (req, res) => {
       {
         $unwind: "$location",
       },
+      {
+        $project: {
+          _id: 0,
+          location: "$location._id",
+          services: "$reportData",
+          createdAt: 1,
+        },
+      },
     ]);
 
-    const locations = [
-      {
-        name: "Location A",
-        users: [
-          {
-            companyName: "Company 1",
-            name: "John Doe",
-            department: "Marketing",
-            id: 123,
-          },
-          {
-            companyName: "Company 2",
-            name: "Jane Smith",
-            department: "Sales",
-            id: 456,
-          },
-        ],
-      },
-      {
-        name: "Location B",
-        users: [
-          {
-            companyName: "Company 3",
-            name: "Bob Johnson",
-            department: "Engineering",
-            id: 789,
-          },
-          {
-            companyName: "Company 4",
-            name: "Alice Brown",
-            department: "Finance",
-            id: 101,
-          },
-        ],
-      },
-    ];
+    const today = new Date();
+    today.setDate(today.getDate());
 
-    // Create a new PDF document
-    const doc = new PDFDocument();
+    for (let i = 0; i < allLocations.length; i++) {
+      for (let j = 0; j < allLocations[i].services.length; j++) {
+        let temp = allLocations[i].services[j];
+        const serv = {
+          id: temp.service.id,
+          name:
+            temp.service.serviceName ||
+            temp.service.productName + " - " + temp.count,
+          0: "",
+          1: "",
+          2: "",
+          3: "",
+          4: "",
+          5: "",
+          6: "",
+        };
+        if (j === 0) {
+          finalData.push({
+            id: allLocations[i].id,
+            floor: allLocations[i].floor,
+            location: allLocations[i].location,
+            services: [serv],
+          });
+        } else finalData[i].services.push(serv);
+      }
+    }
 
-    // Pipe the PDF document to a writable stream
-    const stream = fs.createWriteStream("users.pdf");
-    doc.pipe(stream);
+    for (let i = 0; i < finalData.length; i++) {
+      for (let j = 0; j < data1.length; j++) {
+        if (finalData[i].id === data1[j].location.toString()) {
+          for (let k = 0; k < finalData[i].services.length; k++) {
+            if (
+              finalData[i].services[k].name === data1[j].services.serviceName
+            ) {
+              finalData[i].services[k][data1[j].createdAt.getDay()] =
+                data1[j].services.action;
+            }
+          }
+        }
+      }
+    }
 
-    // Loop through each location
-    locations.forEach((location) => {
-      // Add location name as a title
-      doc
-        .font("Helvetica-Bold")
-        .fontSize(16)
-        .text(location.name, { align: "center" })
-        .moveDown();
-
-      // Calculate column widths
-      const tableWidth = 450;
-      const columnWidth = tableWidth / 4;
-
-      // Create a table header
-      doc.font("Helvetica-Bold").fontSize(12);
-      doc.text("Company Name", 50, doc.y);
-      doc.text("User Name", 50 + columnWidth, doc.y);
-      doc.text("User Department", 50 + columnWidth, doc.y);
-      doc.text("User ID", 50 + columnWidth, doc.y);
-      doc.moveDown();
-
-      // Loop through each user in the location
-      location.users.forEach((user) => {
-        // Add user information to the table
-        doc.font("Helvetica").fontSize(10);
-        doc.text(user.companyName, 50, doc.y);
-        doc.text(user.name, columnWidth, doc.y);
-        doc.text(user.department, columnWidth, doc.y);
-        doc.text(user.id.toString(), columnWidth, doc.y);
-        doc.moveDown();
-      });
-
-      // Add a border around the table
-      const tableHeight = (location.users.length + 1) * 15;
-      doc.rect(50, doc.y - tableHeight, tableWidth, tableHeight + 10).stroke();
-      doc.moveDown();
-    });
-
-    // Finalize the PDF and close the stream
-    doc.end();
-    stream.on("finish", () => {
-      console.log("PDF created successfully!");
-    });
+    res.status(200).json({ finalData });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
