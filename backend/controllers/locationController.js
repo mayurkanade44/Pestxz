@@ -38,7 +38,7 @@ export const addLocation = async (req, res) => {
     const loc = await Location.create(req.body);
 
     const buf = await qrCodeGenerator(
-      `https://pps.sat9.in/qr-location/${loc._id}`,
+      `https://pestxz.com/qr-location/${loc._id}`,
       floor,
       location,
       product
@@ -102,7 +102,7 @@ export const editLocation = async (req, res) => {
     }
 
     const buf = await qrCodeGenerator(
-      `https://pps.sat9.in/qr-location/${loc._id}`,
+      `https://pestxz.com/qr-location/${loc._id}`,
       floor,
       location,
       product
@@ -188,7 +188,7 @@ const qrCodeGenerator = async (link, floor, location, product) => {
     ctx.fillStyle = "rgb(32, 125, 192)";
     ctx.textAlign = "center";
     ctx.font = "italic bold 15px Arial";
-    ctx.fillText(`Powered By Sat9`, width / 2, 17);
+    ctx.fillText(`Powered By PestXZ`, width / 2, 17);
 
     const buf = canvas.toBuffer("image/jpeg");
     return buf;
