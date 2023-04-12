@@ -123,7 +123,7 @@ const AddLocation = ({ clientId, alreadyService, toggle, ser }) => {
         setAddServices((prev) => ({
           ...prev,
           name: [ser],
-          services: [{ service: ser._id }],
+          services: [{ service: ser._id, name: ser.productName }],
         }));
       }
     }

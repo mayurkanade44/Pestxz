@@ -21,7 +21,10 @@ export const addLocation = async (req, res) => {
     if (!ship)
       return res.status(404).json({ msg: "Selected client to not found" });
 
+    let product = "";
+
     if (services[0].count) {
+      product = services[0].name + " - " + services[0].count;
       const loc1 = await Location.find({
         shipTo: id,
         "services.service": services[0].service,
@@ -37,7 +40,8 @@ export const addLocation = async (req, res) => {
     const buf = await qrCodeGenerator(
       `https://pps.sat9.in/qr-location/${loc._id}`,
       floor,
-      location
+      location,
+      product
     );
 
     fs.writeFileSync("./files/image.jpeg", buf);
@@ -79,13 +83,15 @@ export const getLocationServices = async (req, res) => {
 };
 
 export const editLocation = async (req, res) => {
-  const { services } = req.body;
+  const { floor, location, services } = req.body;
   const { id } = req.params;
   try {
     const loc = await Location.findById(id);
     if (!loc) return res.status(404).json({ msg: "Location not found" });
 
+    let product = "";
     if (services[0].count) {
+      product = services[0].name + " - " + services[0].count;
       const loc1 = await Location.find({
         shipTo: loc.shipTo,
         "services.service": services[0].service,
@@ -94,6 +100,22 @@ export const editLocation = async (req, res) => {
       if (loc1.length > 0)
         return res.status(400).json({ msg: "Product count already exist" });
     }
+
+    const buf = await qrCodeGenerator(
+      `https://pps.sat9.in/qr-location/${loc._id}`,
+      floor,
+      location,
+      product
+    );
+
+    fs.writeFileSync("./files/image.jpeg", buf);
+
+    const result = await cloudinary.uploader.upload("files/image.jpeg", {
+      use_filename: true,
+      folder: "service-cards",
+    });
+
+    req.body.qr = result.secure_url;
 
     await Location.findByIdAndUpdate({ _id: id }, req.body, {
       new: true,
@@ -142,7 +164,7 @@ export const getSingleShipTo = async (req, res) => {
   }
 };
 
-const qrCodeGenerator = async (link, floor, location) => {
+const qrCodeGenerator = async (link, floor, location, product) => {
   try {
     let height = 200,
       width = 200,
@@ -161,11 +183,12 @@ const qrCodeGenerator = async (link, floor, location) => {
     ctx.font = "12px Arial";
     ctx.textAlign = "start";
     ctx.fillText(`Floor: ${floor}`, 2, height + 40);
-    ctx.fillText(`Location: ${location}`, 2, height + 55);
+    ctx.fillText(`Location: ${location}`, 2, height + 53);
+    product && ctx.fillText(`Product: ${product}`, 2, height + 67);
     ctx.fillStyle = "rgb(32, 125, 192)";
     ctx.textAlign = "center";
     ctx.font = "italic bold 15px Arial";
-    ctx.fillText(`Powered By Sat9`, width / 2, 15);
+    ctx.fillText(`Powered By Sat9`, width / 2, 17);
 
     const buf = canvas.toBuffer("image/jpeg");
     return buf;
