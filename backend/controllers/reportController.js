@@ -35,10 +35,12 @@ export const addRecord = async (req, res) => {
       let temp = {};
       if (req.body.action[i] === "false") continue;
       temp.id = req.body.id[i];
+      temp.serviceId = req.body.serviceId[i];
       temp.serviceName = req.body.serviceName[i];
       temp.action = req.body.action[i];
       temp.value = req.body.value[i];
       temp.comment = req.body.comment[i];
+      temp.coordinates = req.body.coordinates[i];
       if (req.body.uploaded[i] === "true") {
         const result = await cloudinary.uploader.upload(
           images[i].tempFilePath,
