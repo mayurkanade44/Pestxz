@@ -1,4 +1,5 @@
 import main from "../images/sat9.jpg";
+import logo from "../images/logo.png";
 import { InputRow } from "../components";
 import { handleUser, loginUser } from "../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,10 +44,13 @@ const Landing = () => {
 
   return (
     <div className="landing">
-      <div className="container page mt-5">
+      <div className="container page mt-4">
         <img src={main} alt="job hunt" className="img main-img" />
         <div className="info">
-          <h1 className="text-center">
+          <div className="d-flex justify-content-center landing-logo">
+            <img src={logo} alt="logo" style={{ width: 200 }} />
+          </div>
+          <h1 className="text-center my-2">
             Service <span>Tracking</span> Portal
           </h1>
           <form action="submit" className="form" onSubmit={handleSubmit}>

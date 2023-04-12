@@ -47,7 +47,7 @@ const Stats = () => {
                   {item.shipToName}
                 </div>
                 <div className="card-body py-2">
-                  <div className="">
+                  <div className="text-start">
                     <p className="card-text mb-0">
                       Address - {item.shipToAddress}
                     </p>

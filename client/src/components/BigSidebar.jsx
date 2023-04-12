@@ -1,9 +1,8 @@
 import NavLinks from "./NavLinks";
-import Logo from "../components/Logo";
 import { useSelector } from "react-redux";
 
 const BigSidebar = () => {
-   const { isSidebarOpen } = useSelector((store) => store.user);
+  const { isSidebarOpen } = useSelector((store) => store.user);
   return (
     <div className="big-bar">
       <div
@@ -14,9 +13,7 @@ const BigSidebar = () => {
         }
       >
         <div className="content">
-          <header>
-            <Logo />
-          </header>
+          <header></header>
           <NavLinks />
         </div>
       </div>

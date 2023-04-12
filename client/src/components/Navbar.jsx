@@ -1,8 +1,8 @@
 import { FaAlignLeft, FaUserCircle, FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
-import { Logo } from ".";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, toggleSidebar } from "../redux/userSlice";
+import logo from "../images/logo.png";
 
 const Navbar = () => {
   const [showLogout, setShowLogout] = useState(false);
@@ -20,8 +20,12 @@ const Navbar = () => {
           <FaAlignLeft />
         </button>
         <div>
-          <Logo />
-          <h3 className="logo-text">dashboard</h3>
+          <img
+            src={logo}
+            alt="logo"
+            style={{ width: 95 }}
+            className="mobile-logo"
+          />
         </div>
         <div className="btn-container">
           <button

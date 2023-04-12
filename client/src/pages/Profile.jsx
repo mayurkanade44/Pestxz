@@ -56,10 +56,10 @@ const Profile = () => {
               <div className="col-md-7">
                 <h5>Address - {allUsers[0].company.companyAddress} </h5>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-3">
                 <h5>Contact - {allUsers[0].company.companyContact} </h5>
               </div>
-              <div className="col-md-6">
+              <div className="col-md-3">
                 <h5>Email Id - {allUsers[0].company.companyEmail} </h5>
               </div>
             </>

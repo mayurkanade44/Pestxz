@@ -252,7 +252,7 @@ ul {
   border-radius: var(--borderRadius);
   box-shadow: var(--shadow-2);
   padding: 2rem 2.5rem;
-  margin: 3rem auto;
+  margin: 0rem auto;
   transition: var(--transition);
 }
 .form:hover {
@@ -409,6 +409,9 @@ ul {
   .landing .form {
     margin-top: 20px;
   }
+  .landing-logo {
+    display: none !important;
+  }
 }
 
 /*===================== Dashboard =====================*/
@@ -482,7 +485,7 @@ ul {
   width: 100%;
   background: var(--primary-100);
   box-shadow: var(--shadow-2);
-  padding: 0.5rem;
+  padding: 0.25rem;
   text-align: center;
   visibility: hidden;
   border-radius: var(--borderRadius);
@@ -493,7 +496,7 @@ ul {
 .navbar .dropdown-btn {
   background: transparent;
   border-color: transparent;
-  color: var(--primary-500);
+  color: black;
   letter-spacing: var(--letterSpacing);
   text-transform: capitalize;
   cursor: pointer;
@@ -511,9 +514,7 @@ ul {
   .navbar .nav-center {
     width: 90%;
   }
-  .navbar .logo {
-    display: none;
-  }
+
   .navbar .logo-text {
     display: block;
   }
@@ -543,8 +544,12 @@ ul {
     text-transform: capitalize;
     display: inline-block;
   }
-  .logo {
-    width: 65px !important;
+  .mobile-logo {
+    width: 70px !important;
+  }
+
+  .navbar .dropdown {
+    padding: 0.1rem;
   }
 }
 
@@ -662,7 +667,7 @@ ul {
   cursor: pointer;
 }
 .small-bar .nav-links {
-  padding-top: 2rem;
+  padding-top: 1rem;
   display: flex;
   flex-direction: column;
 }

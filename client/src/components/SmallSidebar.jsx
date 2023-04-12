@@ -1,5 +1,5 @@
 import { FaTimes } from "react-icons/fa";
-import Logo from "./Logo";
+import logo from "../images/logo.png";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLinks } from ".";
 import { toggleSidebar } from "../redux/userSlice";
@@ -23,9 +23,12 @@ const SmallSidebar = () => {
           <button className="close-btn" onClick={toggle}>
             <FaTimes />
           </button>
-          <header>
-            <Logo />
-          </header>
+          <img
+            src={logo}
+            alt="logo"
+            style={{ width: 95 }}
+            className="mobile-logo"
+          />
           <NavLinks toggleSidebar={toggle} />
         </div>
       </div>
