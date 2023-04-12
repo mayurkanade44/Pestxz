@@ -1,4 +1,4 @@
-import main from "../images/pest.png";
+import main from "../images/sat9.jpg";
 import { InputRow } from "../components";
 import { handleUser, loginUser } from "../redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";

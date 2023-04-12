@@ -520,6 +520,32 @@ ul {
 }
 
 @media (max-width: 767px) {
+  .navbar .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 0.1rem;
+    position: relative;
+    padding: 0.1rem, 0.2rem !important;
+    box-shadow: var(--shadow-2);
+  }
+
+  .nav-btn {
+    cursor: pointer;
+    color: var(--white);
+    background: var(--primary-500);
+    border: transparent;
+    border-radius: var(--borderRadius);
+    letter-spacing: var(--letterSpacing);
+    padding: 0.15rem 0.4rem;
+    box-shadow: var(--shadow-2);
+    transition: var(--transition);
+    text-transform: capitalize;
+    display: inline-block;
+  }
+  .logo {
+    width: 65px !important;
+  }
 }
 
 /*===================== Big Sidebar =====================*/
@@ -548,10 +574,10 @@ ul {
     margin-left: 0;
   }
   .big-bar header {
-    height: 6rem;
+    height: 5rem;
     display: flex;
     align-items: center;
-    padding-left: 2.5rem;
+    padding-left: 4.2rem;
   }
   .big-bar .nav-links {
     padding-top: 2rem;

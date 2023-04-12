@@ -26,7 +26,7 @@ const Navbar = () => {
         <div className="btn-container">
           <button
             type="button"
-            className="btn"
+            className="btn nav-btn"
             onClick={() => setShowLogout(!showLogout)}
           >
             <FaUserCircle />
