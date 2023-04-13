@@ -6,7 +6,6 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { createCanvas, loadImage } from "canvas";
-import mongoose from "mongoose";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -48,7 +47,7 @@ export const addLocation = async (req, res) => {
 
     const result = await cloudinary.uploader.upload("files/image.jpeg", {
       use_filename: true,
-      folder: "service-cards",
+      folder: "Pestxz",
     });
 
     loc.qr = result.secure_url;
@@ -112,7 +111,7 @@ export const editLocation = async (req, res) => {
 
     const result = await cloudinary.uploader.upload("files/image.jpeg", {
       use_filename: true,
-      folder: "service-cards",
+      folder: "Pestxz",
     });
 
     req.body.qr = result.secure_url;

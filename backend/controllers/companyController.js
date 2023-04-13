@@ -1,4 +1,5 @@
 import Company from "../models/Company.js";
+import User from "../models/User.js";
 
 export const registerCompany = async (req, res) => {
   const { companyName, companyAddress, companyContact, companyEmail } =
@@ -14,6 +15,17 @@ export const registerCompany = async (req, res) => {
         .json({ msg: `${companyName} company already registered` });
 
     const company = await Company.create(req.body);
+
+    const user = {
+      name: companyName,
+      role: "Admin",
+      email: companyEmail,
+      password: companyEmail,
+      company: company._id,
+    };
+
+    await User.create(user);
+
     return res
       .status(201)
       .json({ msg: `${company.companyName} has been registered` });

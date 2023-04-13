@@ -32,10 +32,11 @@ export const addRecord = async (req, res) => {
     }
 
     let address = "Location Access Not Provided";
+
     const cord = req.body.coordinates[1] || false;
     if (cord) {
       const { data } = await axios.get(
-        `${process.env.URL_START}${cord}${process.env.URL_END}`
+        `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${cord}&apiKey=${process.env.HERE_API_KEY}`
       );
       address = data.items[0].title;
     }
@@ -56,7 +57,7 @@ export const addRecord = async (req, res) => {
           images[i].tempFilePath,
           {
             use_filename: true,
-            folder: "reports",
+            folder: "Pestxz",
             quality: 30,
           }
         );
@@ -241,7 +242,7 @@ export const generateServiceReport = async (req, res) => {
       {
         resource_type: "raw",
         use_filename: true,
-        folder: "service-cards",
+        folder: "Pestxz",
       }
     );
 
