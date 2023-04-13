@@ -39,3 +39,14 @@ export const registerCompany = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
+
+export const allCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find();
+
+    return res.status(200).json({ companies });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};

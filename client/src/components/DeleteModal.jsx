@@ -3,7 +3,7 @@ const DeleteModal = ({ handleDelete, name, title }) => {
     <div>
       <button
         type="button"
-        className="btn btn-danger"
+        className="btn btn-danger btn-sm"
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
       >

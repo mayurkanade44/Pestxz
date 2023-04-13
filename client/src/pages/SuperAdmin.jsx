@@ -1,8 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
-import { InputRow, Loading, Navbar } from "../components";
-import { handleSuperAdmin, registerCompany } from "../redux/superAdminSlice";
+import { DeleteModal, InputRow, Loading, Navbar } from "../components";
+import {
+  getAllCompanies,
+  handleSuperAdmin,
+  registerCompany,
+} from "../redux/superAdminSlice";
 import { toast } from "react-toastify";
 import { capitalLetter } from "../utils/data";
+import { useEffect } from "react";
 
 const SuperAdmin = () => {
   const {
@@ -11,8 +16,13 @@ const SuperAdmin = () => {
     companyEmail,
     companyContact,
     superAdminLoading,
+    allCompanies,
   } = useSelector((store) => store.superAdmin);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllCompanies());
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -86,6 +96,28 @@ const SuperAdmin = () => {
               </button>
             </div>
           </form>
+          <table className="table table-striped table-bordered border-warning my-3">
+            <thead>
+              <tr>
+                <th className="text-center">Company Name</th>
+                <th className="text-center">Company Email</th>
+                <th style={{ width: 290 }} className="text-center">
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {allCompanies?.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.companyName}</td>
+                  <td>{item.companyEmail}</td>
+                  <td>
+                    <DeleteModal />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

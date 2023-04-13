@@ -24,6 +24,19 @@ export const registerCompany = createAsyncThunk(
   }
 );
 
+export const getAllCompanies = createAsyncThunk(
+  "superAdmin/allCompanies",
+  async (_, thunkAPI) => {
+    try {
+      const res = await authFetch.get("/company/registerCompany");
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const superAdminSlice = createSlice({
   name: "superAdmin",
   initialState,
@@ -45,6 +58,17 @@ const superAdminSlice = createSlice({
       toast.success(payload.msg);
     });
     builder.addCase(registerCompany.rejected, (state, { payload }) => {
+      state.superAdminLoading = false;
+      toast.error(payload);
+    });
+    builder.addCase(getAllCompanies.pending, (state) => {
+      state.superAdminLoading = true;
+    });
+    builder.addCase(getAllCompanies.fulfilled, (state, { payload }) => {
+      state.superAdminLoading = false;
+      state.allCompanies = payload.companies;
+    });
+    builder.addCase(getAllCompanies.rejected, (state, { payload }) => {
       state.superAdminLoading = false;
       toast.error(payload);
     });
