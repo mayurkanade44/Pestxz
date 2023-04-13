@@ -8,11 +8,16 @@ export const registerCompany = async (req, res) => {
     if (!companyName || !companyAddress || !companyContact || !companyEmail)
       return res.status(400).json({ msg: "Please provide all values" });
 
-    const alreadyExists = await Company.findOne({ companyName });
+    const alreadyExists = await Company.findOne({
+      $or: [
+        { companyName: { $regex: companyName, $options: "i" } },
+        { companyEmail },
+      ],
+    });
     if (alreadyExists)
       return res
         .status(400)
-        .json({ msg: `${companyName} company already registered` });
+        .json({ msg: `Company name/email id already registered` });
 
     const company = await Company.create(req.body);
 
