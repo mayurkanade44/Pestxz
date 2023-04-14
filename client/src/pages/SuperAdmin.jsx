@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { DeleteModal, InputRow, Loading, Navbar } from "../components";
 import {
+  deleteCompany,
   getAllCompanies,
   handleSuperAdmin,
   registerCompany,
@@ -22,6 +23,8 @@ const SuperAdmin = () => {
 
   useEffect(() => {
     dispatch(getAllCompanies());
+
+    // eslint-disable-next-line
   }, []);
 
   const handleSubmit = (e) => {
@@ -61,7 +64,6 @@ const SuperAdmin = () => {
                 value={companyName}
                 handleChange={handleChange}
               />
-
               <InputRow
                 type="text"
                 labelText="Company Address"
@@ -69,15 +71,13 @@ const SuperAdmin = () => {
                 value={companyAddress}
                 handleChange={handleChange}
               />
-
               <InputRow
-                type="text"
+                type="email"
                 labelText="Company Email"
                 name="companyEmail"
                 value={companyEmail}
                 handleChange={handleChange}
               />
-
               <InputRow
                 type="text"
                 labelText="Company Contact"
@@ -85,7 +85,6 @@ const SuperAdmin = () => {
                 value={companyContact}
                 handleChange={handleChange}
               />
-
               <button
                 type="submit"
                 className="btn btn-primary me-2"
@@ -109,10 +108,14 @@ const SuperAdmin = () => {
             <tbody>
               {allCompanies?.map((item) => (
                 <tr key={item._id}>
-                  <td>{item.companyName}</td>
-                  <td>{item.companyEmail}</td>
-                  <td>
-                    <DeleteModal />
+                  <td className="text-center">{item.companyName}</td>
+                  <td className="text-center">{item.companyEmail}</td>
+                  <td className="text-center">
+                    <DeleteModal
+                      handleDelete={() => dispatch(deleteCompany(item._id))}
+                      name={item.companyName}
+                      title="Company"
+                    />
                   </td>
                 </tr>
               ))}

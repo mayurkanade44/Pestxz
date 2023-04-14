@@ -31,9 +31,10 @@ export const registerCompany = async (req, res) => {
 
     await User.create(user);
 
+    const companies = await Company.find();
     return res
       .status(201)
-      .json({ msg: `${company.companyName} has been registered` });
+      .json({ msg: `${company.companyName} has been registered`, companies });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -45,6 +46,20 @@ export const allCompanies = async (req, res) => {
     const companies = await Company.find();
 
     return res.status(200).json({ companies });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const deleteCompany = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await User.deleteMany({ company: id });
+    await Company.findByIdAndDelete(id);
+
+    const companies = await Company.find();
+    return res.status(200).json({ msg: "Company has been deleted", companies });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
