@@ -263,11 +263,10 @@ export const generateServiceReport = async (req, res) => {
 export const weeklyReport = async (req, res) => {
   try {
     const finalData = [];
-
-    const data = await Report.find({
-      shipTo: "642d62c33fa94fb3a9b46e3c",
-      createdAt: { $gte: new Date("2023-04-08"), $lte: new Date("2023-04-12") },
-    });
+    const today = new Date();
+    const today1 = new Date();
+    const fromDate = new Date(today1.setDate(today1.getDate() - 7));
+    const endDate = new Date(today.setDate(today.getDate() + 1));
 
     const allLocations = await Location.find({
       shipTo: "6438f0af32febf3260236ede",
@@ -308,9 +307,17 @@ export const weeklyReport = async (req, res) => {
         $unwind: "$location",
       },
       {
+        $match: {
+          createdAt: {
+            $gte: fromDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
         $project: {
           _id: 0,
-          client: "$shipTo.shipToName",
+          client: { name: "$shipTo.shipToName", email: "$shipTo.shipToEmail" },
           location: "$location._id",
           services: "$reportData",
           createdAt: 1,
@@ -318,10 +325,7 @@ export const weeklyReport = async (req, res) => {
       },
     ]);
 
-    const today = new Date();
-    today.setDate(today.getDate());
-
-    const clintName = data1[0].client;
+    
 
     for (let i = 0; i < allLocations.length; i++) {
       for (let j = 0; j < allLocations[i].services.length; j++) {
@@ -329,13 +333,13 @@ export const weeklyReport = async (req, res) => {
         const serv = [
           temp.service.serviceName ||
             temp.service.productName + " - " + temp.count,
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
+          "-",
           temp.service.id,
         ];
         if (j === 0) {
@@ -365,9 +369,18 @@ export const weeklyReport = async (req, res) => {
       }
     }
 
-    await generatePDF({ data: finalData, clintName });
+    const link = await generatePDF({
+      data: finalData,
+      clintName: data1[0].client.name,
+    });
 
-    res.status(200).json({ finalData });
+    const mailData = {
+      link,
+      name: data1[0].client.name,
+      email: data1[0].client.email,
+    };
+
+    return res.status(201).json({ link });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -383,7 +396,7 @@ export const generatePDF = async ({ data, clintName }) => {
     for (let i = 0; i < data.length; i++) {
       const temp = [
         [
-          { text: "Service Name", style: "tableHeader" },
+          { text: "Type Of Work", style: "tableHeader" },
           { text: "Mon", style: "tableHeader" },
           { text: "Tue", style: "tableHeader" },
           { text: "Wed", style: "tableHeader" },
@@ -445,8 +458,57 @@ export const generatePDF = async ({ data, clintName }) => {
     const printer = new PdfPrinter(fonts);
 
     var pdfDoc = printer.createPdfKitDocument(docDefinition, {});
-    pdfDoc.pipe(fs.createWriteStream("tables.pdf"));
+    let writeStream = fs.createWriteStream(`./files/${clintName}.pdf`);
+    pdfDoc.pipe(writeStream);
     pdfDoc.end();
+
+    const result = await cloudinary.uploader.upload(
+      `./files/${clintName}.pdf`,
+      {
+        resource_type: "raw",
+        use_filename: true,
+        folder: "Pestxz",
+      }
+    );
+    fs.unlinkSync(`./files/${clintName}.pdf`);
+    return result.secure_url;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+const sendEmail = async (mailData) => {
+  try {
+    const fileType = mailData.link.split(".").pop();
+    const result = await axios.get(mailData.link, {
+      responseType: "arraybuffer",
+    });
+    const base64File = Buffer.from(result.data, "binary").toString("base64");
+
+    const attachObj = {
+      content: base64File,
+      filename: `${mailData.name}.${fileType}`,
+      type: `application/${fileType}`,
+      disposition: "attachment",
+    };
+    attach.push(attachObj);
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    const msg = {
+      to: mailData.email,
+      from: { email: "noreply.epcorn@gmail.com", name: "donotreply_epcorn" },
+      dynamic_template_data: {
+        fileName: mailData.name,
+        video: ytVideo,
+        name: userName,
+      },
+      template_id: "d-70c32e835f864676a70866c38b467a97",
+      attachments: attach,
+    };
+
+    await sgMail.send(msg);
   } catch (error) {
     console.log(error);
     return error;
