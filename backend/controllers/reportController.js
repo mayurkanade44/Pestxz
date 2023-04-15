@@ -5,6 +5,7 @@ import exceljs from "exceljs";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import axios from "axios";
+import PdfPrinter from "pdfmake";
 
 export const addRecord = async (req, res) => {
   const { action } = req.body;
@@ -223,7 +224,9 @@ export const generateServiceReport = async (req, res) => {
         value: item.services.value,
         comment: item.services.comment,
         address: item.services.address,
-        image: item.services.image,
+        image: item.services.image
+          ? { text: item.services.image, hyperlink: item.services.image }
+          : "No Image",
         user: item.user.name,
       });
     });
@@ -267,7 +270,7 @@ export const weeklyReport = async (req, res) => {
     });
 
     const allLocations = await Location.find({
-      shipTo: "642d62c33fa94fb3a9b46e3c",
+      shipTo: "6438f0af32febf3260236ede",
     })
       .populate({
         path: "reports services.service",
@@ -289,7 +292,7 @@ export const weeklyReport = async (req, res) => {
       },
       {
         $match: {
-          "shipTo._id": new mongoose.Types.ObjectId("642d62c33fa94fb3a9b46e3c"),
+          "shipTo._id": new mongoose.Types.ObjectId("6438f0af32febf3260236ede"),
         },
       },
       { $unwind: "$reportData" },
@@ -307,6 +310,7 @@ export const weeklyReport = async (req, res) => {
       {
         $project: {
           _id: 0,
+          client: "$shipTo.shipToName",
           location: "$location._id",
           services: "$reportData",
           createdAt: 1,
@@ -317,22 +321,23 @@ export const weeklyReport = async (req, res) => {
     const today = new Date();
     today.setDate(today.getDate());
 
+    const clintName = data1[0].client;
+
     for (let i = 0; i < allLocations.length; i++) {
       for (let j = 0; j < allLocations[i].services.length; j++) {
         let temp = allLocations[i].services[j];
-        const serv = {
-          id: temp.service.id,
-          name:
-            temp.service.serviceName ||
+        const serv = [
+          temp.service.serviceName ||
             temp.service.productName + " - " + temp.count,
-          0: "",
-          1: "",
-          2: "",
-          3: "",
-          4: "",
-          5: "",
-          6: "",
-        };
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          temp.service.id,
+        ];
         if (j === 0) {
           finalData.push({
             id: allLocations[i].id,
@@ -348,20 +353,102 @@ export const weeklyReport = async (req, res) => {
       for (let j = 0; j < data1.length; j++) {
         if (finalData[i].id === data1[j].location.toString()) {
           for (let k = 0; k < finalData[i].services.length; k++) {
-            if (
-              finalData[i].services[k].name === data1[j].services.serviceName
-            ) {
-              finalData[i].services[k][data1[j].createdAt.getDay()] =
-                data1[j].services.action;
+            if (finalData[i].services[k][8] === data1[j].services.serviceId) {
+              if (data1[j].createdAt.getDay() === 0) {
+                finalData[i].services[k][7] = data1[j].services.action;
+              } else
+                finalData[i].services[k][data1[j].createdAt.getDay()] =
+                  data1[j].services.action;
             }
           }
         }
       }
     }
 
+    await generatePDF({ data: finalData, clintName });
+
     res.status(200).json({ finalData });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const generatePDF = async ({ data, clintName }) => {
+  try {
+    const docDefinition = {
+      content: [{ text: `Weekly Report Of ${clintName}`, style: "header" }],
+    };
+
+    for (let i = 0; i < data.length; i++) {
+      const temp = [
+        [
+          { text: "Service Name", style: "tableHeader" },
+          { text: "Mon", style: "tableHeader" },
+          { text: "Tue", style: "tableHeader" },
+          { text: "Wed", style: "tableHeader" },
+          { text: "Thu", style: "tableHeader" },
+          { text: "Fri", style: "tableHeader" },
+          { text: "Sat", style: "tableHeader" },
+          { text: "Sun", style: "tableHeader" },
+        ],
+      ];
+      for (let j = 0; j < data[i].services.length; j++) {
+        const service = Object.values(data[i].services[j]);
+        service.pop();
+        temp.push(service);
+      }
+      docDefinition["content"].push(
+        {
+          text: [
+            { text: "Location - ", bold: true },
+            `${data[i].floor} / ${data[i].location}`,
+          ],
+          style: "subheader",
+        },
+        {
+          style: "tableExample",
+          table: {
+            headerRows: 1,
+            body: temp,
+          },
+        }
+      );
+    }
+
+    docDefinition.styles = {
+      header: {
+        fontSize: 18,
+        color: "#003893",
+        bold: true,
+        alignment: "center",
+        margin: [0, 0, 0, 30],
+      },
+      subheader: {
+        margin: [0, 0, 0, 5],
+      },
+      tableExample: {
+        margin: [0, 0, 0, 20],
+      },
+      tableHeader: {
+        bold: true,
+      },
+    };
+
+    const fonts = {
+      Roboto: {
+        normal: "./fonts/Roboto-Regular.ttf",
+        bold: "./fonts/Roboto-Bold.ttf",
+      },
+    };
+
+    const printer = new PdfPrinter(fonts);
+
+    var pdfDoc = printer.createPdfKitDocument(docDefinition, {});
+    pdfDoc.pipe(fs.createWriteStream("tables.pdf"));
+    pdfDoc.end();
+  } catch (error) {
+    console.log(error);
+    return error;
   }
 };
