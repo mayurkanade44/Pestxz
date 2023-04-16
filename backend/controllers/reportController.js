@@ -1,11 +1,13 @@
 import Report from "../models/Report.js";
 import Location from "../models/Location.js";
+import Company from "../models/Company.js";
 import mongoose from "mongoose";
 import exceljs from "exceljs";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import axios from "axios";
 import PdfPrinter from "pdfmake";
+import sgMail from "@sendgrid/mail";
 
 export const addRecord = async (req, res) => {
   const { action } = req.body;
@@ -268,12 +270,15 @@ export const weeklyReport = async (req, res) => {
     const fromDate = new Date(today1.setDate(today1.getDate() - 7));
     const endDate = new Date(today.setDate(today.getDate() + 1));
 
+    const companies = await Company.find();
+    const companyName = companies[0].companyName;
+
     const allLocations = await Location.find({
       shipTo: "6438f0af32febf3260236ede",
     })
       .populate({
-        path: "reports services.service",
-        select: "reportData createdAt serviceName productName",
+        path: "services.service",
+        select: "serviceName productName",
       })
       .select("floor location services.count");
 
@@ -325,8 +330,6 @@ export const weeklyReport = async (req, res) => {
       },
     ]);
 
-    
-
     for (let i = 0; i < allLocations.length; i++) {
       for (let j = 0; j < allLocations[i].services.length; j++) {
         let temp = allLocations[i].services[j];
@@ -369,6 +372,12 @@ export const weeklyReport = async (req, res) => {
       }
     }
 
+    const date = `From ${fromDate.toISOString().split("T")[0]} To ${
+      new Date(endDate.setDate(endDate.getDate() - 2))
+        .toISOString()
+        .split("T")[0]
+    }`;
+
     const link = await generatePDF({
       data: finalData,
       clintName: data1[0].client.name,
@@ -378,9 +387,17 @@ export const weeklyReport = async (req, res) => {
       link,
       name: data1[0].client.name,
       email: data1[0].client.email,
+      date,
+      company: companyName,
     };
 
-    return res.status(201).json({ link });
+    const mail = await sendEmail(mailData);
+
+    if (mail) return res.status(200).json({ msg: "Report successfully sent" });
+
+    return res
+      .status(400)
+      .json({ msg: "There is some error, Try again later" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
@@ -441,10 +458,13 @@ export const generatePDF = async ({ data, clintName }) => {
         margin: [0, 0, 0, 5],
       },
       tableExample: {
-        margin: [0, 0, 0, 20],
+        alignment: "center",
+        margin: [0, 0, 0, 25],
+        fontSize: 10,
       },
       tableHeader: {
         bold: true,
+        fontSize: 10,
       },
     };
 
@@ -492,25 +512,26 @@ const sendEmail = async (mailData) => {
       type: `application/${fileType}`,
       disposition: "attachment",
     };
-    attach.push(attachObj);
+    const attach = [attachObj];
 
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     const msg = {
       to: mailData.email,
-      from: { email: "noreply.epcorn@gmail.com", name: "donotreply_epcorn" },
+      from: { email: "noreply.epcorn@gmail.com", name: "PestXZ" },
       dynamic_template_data: {
-        fileName: mailData.name,
-        video: ytVideo,
-        name: userName,
+        name: mailData.name,
+        date: mailData.date,
+        company: mailData.company,
       },
-      template_id: "d-70c32e835f864676a70866c38b467a97",
+      template_id: "d-658ff3504861472fbdc0ec1419af4869",
       attachments: attach,
     };
 
     await sgMail.send(msg);
+    return true;
   } catch (error) {
     console.log(error);
-    return error;
+    return false;
   }
 };
