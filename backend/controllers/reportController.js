@@ -518,7 +518,7 @@ const sendEmail = async (mailData) => {
 
     const msg = {
       to: mailData.email,
-      from: { email: "noreply.epcorn@gmail.com", name: "PestXZ" },
+      from: { email: "noreply.epcorn@gmail.com", name: mailData.name },
       dynamic_template_data: {
         name: mailData.name,
         date: mailData.date,
