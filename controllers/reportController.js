@@ -8,6 +8,7 @@ import fs from "fs";
 import axios from "axios";
 import PdfPrinter from "pdfmake";
 import sgMail from "@sendgrid/mail";
+import ShipTo from "../models/ShipTo.js";
 
 export const addRecord = async (req, res) => {
   const { action } = req.body;
@@ -76,6 +77,33 @@ export const addRecord = async (req, res) => {
 
     await Report.create(req.body);
     return res.status(201).json({ msg: "Record has been saved" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
+
+export const addComplaint = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const locationExists = await Location.findById(id);
+    if (!locationExists)
+      return res
+        .status(404)
+        .json({ msg: "Given location not found, contact admin" });
+
+    const shipTo = await ShipTo.findById(locationExists.shipTo);
+    if (!shipTo)
+      return res
+        .status(404)
+        .json({ msg: "Given location not found, contact admin" });
+
+    req.body.location = `${locationExists.floor} ${locationExists.location}`;
+    req.body.createdAt = new Date();
+    shipTo.complaints.push(req.body);
+    await shipTo.save();
+    
+    return res.status(201).json({ msg: "Complaint has been raised" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ msg: "Server error, try again later" });
