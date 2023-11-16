@@ -83,33 +83,6 @@ export const addRecord = async (req, res) => {
   }
 };
 
-export const addComplaint = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const locationExists = await Location.findById(id);
-    if (!locationExists)
-      return res
-        .status(404)
-        .json({ msg: "Given location not found, contact admin" });
-
-    const shipTo = await ShipTo.findById(locationExists.shipTo);
-    if (!shipTo)
-      return res
-        .status(404)
-        .json({ msg: "Given location not found, contact admin" });
-
-    req.body.location = `${locationExists.floor} ${locationExists.location}`;
-    req.body.createdAt = new Date();
-    shipTo.complaints.push(req.body);
-    await shipTo.save();
-    
-    return res.status(201).json({ msg: "Complaint has been raised" });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ msg: "Server error, try again later" });
-  }
-};
-
 export const generateServiceReport = async (req, res) => {
   const { shipTo, fromDate, toDate, serviceId, location, floor, user } =
     req.query;

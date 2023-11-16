@@ -1,7 +1,9 @@
 import express from "express";
-import { getLocationServices } from "../controllers/locationController.js";
 import {
   addComplaint,
+  getLocationServices,
+} from "../controllers/locationController.js";
+import {
   addRecord,
   generateServiceReport,
 } from "../controllers/reportController.js";
@@ -18,12 +20,6 @@ router
 
 router.post("/newComplaint/:id", addComplaint);
 
-router
-  .route("/locationServices/:id")
-  .get(
-    authenticateUser,
-    authorizeUser("Admin", "Operator"),
-    getLocationServices
-  );
+router.route("/locationServices/:id").get(getLocationServices);
 
 export default router;

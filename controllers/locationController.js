@@ -84,7 +84,6 @@ export const getLocationServices = async (req, res) => {
 export const editLocation = async (req, res) => {
   const { floor, location, services } = req.body;
   const { id } = req.params;
-  console.log(id);
   try {
     const loc = await Location.findById(id);
     if (!loc) return res.status(404).json({ msg: "Location not found" });
@@ -248,5 +247,51 @@ const qrCodeGenerator = async (link, floor, location, product) => {
   } catch (error) {
     console.log(error);
     return error;
+  }
+};
+
+export const addComplaint = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const locationExists = await Location.findById(id);
+    if (!locationExists)
+      return res
+        .status(404)
+        .json({ msg: "Given location not found, contact admin" });
+
+    const shipTo = await ShipTo.findById(locationExists.shipTo);
+    if (!shipTo)
+      return res
+        .status(404)
+        .json({ msg: "Given location not found, contact admin" });
+
+    let image = "";
+    if (req.files) {
+      const result = await cloudinary.uploader.upload(
+        req.files.image.tempFilePath,
+        {
+          use_filename: true,
+          folder: "Pestxz",
+          quality: 40,
+        }
+      );
+      image = result.secure_url;
+      fs.unlinkSync(req.files.image.tempFilePath);
+    }
+
+    shipTo.complaints.push({
+      floor: locationExists.floor,
+      location: locationExists.location,
+      createdAt: new Date().setUTCHours(0, 0, 0, 0),
+      status: "Open",
+      number: req.body.number,
+      pest: req.body.pest,
+      image,
+    });
+    await shipTo.save();
+    return res.status(201).json({ msg: "Complaint has been raised" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
   }
 };

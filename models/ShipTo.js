@@ -8,11 +8,17 @@ const ShipToSchema = new mongoose.Schema(
     shipToNumber: { type: Number },
     complaints: [
       {
+        floor: String,
         location: String,
         number: Number,
         image: String,
         pest: String,
         status: String,
+        update: {
+          image: String,
+          comment: String,
+          createdAt: Date,
+        },
         createdAt: Date,
       },
     ],
