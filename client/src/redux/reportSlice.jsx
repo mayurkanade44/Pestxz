@@ -5,6 +5,7 @@ import { authFetch, unauthorizedResponse } from "../utils/auth";
 const initialState = {
   reportLoading: false,
   download: "",
+  complaints: [],
 };
 
 export const addLocationRecord = createAsyncThunk(
@@ -59,6 +60,21 @@ export const newComplaint = createAsyncThunk(
   }
 );
 
+export const allComplaints = createAsyncThunk(
+  "user/allComplaints",
+  async ({ client, status }, thunkAPI) => {
+    try {
+      const res = await authFetch.get(
+        `/shipTo/complaints/all?client=${client}&status=${status}`
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const reportSlice = createSlice({
   name: "report",
   initialState,
@@ -102,6 +118,17 @@ const reportSlice = createSlice({
         toast.success(payload.msg);
       })
       .addCase(newComplaint.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(allComplaints.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(allComplaints.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        state.complaints = payload.complaints;
+      })
+      .addCase(allComplaints.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       });

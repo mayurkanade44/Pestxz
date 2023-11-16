@@ -100,7 +100,7 @@ const QRLocation = () => {
     //   });
     // }
 
-    await dispatch(addLocationRecord({ id, form }));
+    await dispatch(addLocationRecord({ id, form })).unwrap();
     setInputField([]);
   };
 

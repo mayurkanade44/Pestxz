@@ -4,6 +4,7 @@ import {
   BsDatabaseAdd,
   BsDatabaseFillAdd,
   BsBuildingAdd,
+  BsChatLeftDots,
 } from "react-icons/bs";
 import { AiFillFileWord } from "react-icons/ai";
 
@@ -12,6 +13,7 @@ export const links = [
   { id: 2, text: "Services", path: "services", icon: <BsDatabaseAdd /> },
   { id: 6, text: "Products", path: "products", icon: <BsDatabaseFillAdd /> },
   { id: 3, text: "Add Client", path: "add-client", icon: <BsBuildingAdd /> },
+  { id: 7, text: "Complaints", path: "complaints", icon: <BsChatLeftDots /> },
   { id: 4, text: "Report", path: "report", icon: <AiFillFileWord /> },
   { id: 5, text: "Profile", path: "profile", icon: <ImProfile /> },
 ];

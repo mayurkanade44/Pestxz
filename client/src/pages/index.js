@@ -10,6 +10,7 @@ import SingleClient from "./SingleClient";
 import Stats from "./Stats";
 import SuperAdmin from "./SuperAdmin";
 import NewComplaint from "./NewComplaint";
+import Complaints from "./Complaints";
 
 export {
   Landing,
@@ -24,4 +25,5 @@ export {
   ServiceProduct,
   SuperAdmin,
   NewComplaint,
+  Complaints,
 };

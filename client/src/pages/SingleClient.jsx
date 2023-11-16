@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { AddLocation, InputSelect, Loading } from "../components";
+import { AddLocation, Loading } from "../components";
 import { setEdit, singleClient } from "../redux/adminSlice";
 import { saveAs } from "file-saver";
 

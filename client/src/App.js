@@ -16,6 +16,7 @@ import {
   ServiceProduct,
   SuperAdmin,
   NewComplaint,
+  Complaints,
 } from "./pages";
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route path="add-client" element={<RegisterClient />} />
           <Route path="report" element={<Report />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="complaints" element={<Complaints />} />
           <Route path="client/:id" element={<SingleClient />} />
           <Route path=":id" element={<ServiceProduct />} />
         </Route>

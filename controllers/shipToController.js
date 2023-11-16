@@ -67,3 +67,21 @@ export const deleteShipTo = async (req, res) => {
     return res.status(500).json({ msg: "Server error, try again later" });
   }
 };
+
+export const getAllComplaints = async (req, res) => {
+  const { client, status } = req.query;
+  try {
+    let query = {
+      company: req.user.company,
+      complaints: { $elemMatch: { status } },
+    };
+    if (client && client !== "Select") query._id = client;
+
+    const complaints = await ShipTo.find(query).select("complaints");
+
+    return res.json({ complaints });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Server error, try again later" });
+  }
+};
