@@ -6,6 +6,7 @@ const InputSelect = ({
   list,
   id,
   qr,
+  required = false,
 }) => {
   return (
     <div className={qr ? "form-qr" : "form-row"}>
@@ -17,6 +18,7 @@ const InputSelect = ({
         id={id}
         value={value}
         onChange={handleChange}
+        required={required}
         className="form-select"
       >
         {list.map((item, index) => {

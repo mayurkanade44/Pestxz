@@ -15,6 +15,7 @@ import {
   Profile,
   ServiceProduct,
   SuperAdmin,
+  NewComplaint,
 } from "./pages";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <ToastContainer position="top-center" autoClose={2000} />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/complaint/:id" element={<NewComplaint />} />
         <Route
           path="/dashboard"
           element={
