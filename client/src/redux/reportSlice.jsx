@@ -75,6 +75,22 @@ export const allComplaints = createAsyncThunk(
   }
 );
 
+export const updateComplaint = createAsyncThunk(
+  "user/updateComplaint",
+  async ({ id, complaintId, form }, thunkAPI) => {
+    try {
+      const res = await authFetch.put(
+        `/shipTo/complaints/${id}?complaintId=${complaintId}`,
+        form
+      );
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return unauthorizedResponse(error, thunkAPI);
+    }
+  }
+);
+
 const reportSlice = createSlice({
   name: "report",
   initialState,
@@ -129,6 +145,17 @@ const reportSlice = createSlice({
         state.complaints = payload.complaints;
       })
       .addCase(allComplaints.rejected, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.error(payload);
+      })
+      .addCase(updateComplaint.pending, (state) => {
+        state.reportLoading = true;
+      })
+      .addCase(updateComplaint.fulfilled, (state, { payload }) => {
+        state.reportLoading = false;
+        toast.success(payload.msg);
+      })
+      .addCase(updateComplaint.rejected, (state, { payload }) => {
         state.reportLoading = false;
         toast.error(payload);
       });

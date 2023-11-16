@@ -12,6 +12,8 @@ import DeleteModal from "./DeleteModal";
 import Loading from "./Loading";
 import Footer from "./Footer";
 import ServProdTable from "./ServProdTable";
+import ComplaintModal from "./ComplaintModal";
+
 
 export {
   Navbar,
@@ -28,4 +30,5 @@ export {
   Loading,
   Footer,
   ServProdTable,
+  ComplaintModal,
 };

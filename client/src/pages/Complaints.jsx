@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { allComplaints } from "../redux/reportSlice";
-import { InputSelect, Loading } from "../components";
+import { allComplaints, updateComplaint } from "../redux/reportSlice";
+import { ComplaintModal, InputSelect, Loading } from "../components";
 import { getCompanyServices } from "../redux/adminSlice";
 
 const Complaints = () => {
@@ -10,15 +10,22 @@ const Complaints = () => {
   const [status, setStatus] = useState("Open");
   const { complaints, reportLoading } = useSelector((store) => store.report);
   const { allClients, adminLoading } = useSelector((store) => store.admin);
+
   useEffect(() => {
     dispatch(allComplaints({ client, status }));
     dispatch(getCompanyServices());
   }, [client, status]);
 
+  const update = ({ id, complaintId }) => {
+    dispatch(updateComplaint({ id, complaintId }));
+  };
+
   return (
     <div>
       {reportLoading && <Loading />}
-      <h4 className="text-center">All Complaints</h4>
+      <h4 style={{ margin: 0 }} className="text-center">
+        All Complaints
+      </h4>
       <div className="d-flex ">
         <div className="w-50 me-3">
           <InputSelect
@@ -39,7 +46,6 @@ const Complaints = () => {
           />
         </div>
       </div>
-
       {complaints?.length < 1 && (
         <h5 className="text-center text-danger">No Complaint Found</h5>
       )}
@@ -48,6 +54,7 @@ const Complaints = () => {
           <table className="table table-striped table-bordered border-primary">
             <thead>
               <tr>
+                <th className="text-center">Client</th>
                 <th className="text-center">Location</th>
                 <th className="text-center">Pest Issue</th>
                 <th style={{ width: 135 }} className="text-center">
@@ -61,31 +68,36 @@ const Complaints = () => {
                 </th>
               </tr>
             </thead>
-
             <tbody>
-              {complaints?.map((i) => {
-                return i.complaints?.map((item) => (
-                  <tr key={item._id}>
+              {complaints?.map((item) => {
+                return (
+                  <tr key={item.id}>
+                    <td>{item.name}</td>
                     <td>
-                      {item.floor} / {item.location}
+                      {item.comp.floor} / {item.comp.location}
                     </td>
-                    <td>{item.pest}</td>
-                    <td className="text-center">{item.number}</td>
+                    <td>{item.comp.pest}</td>
+                    <td className="text-center">{item.comp.number}</td>
                     <td>
                       <button className="btn btn-sm btn-success">
                         <a
                           style={{ textDecoration: "none", color: "inherit" }}
-                          href={item.image}
+                          href={item.comp.image}
                         >
                           Download
                         </a>
                       </button>
                     </td>
                     <td className="text-center">
-                      <button className="btn btn-sm">{item.status}</button>
+                      <ComplaintModal
+                        name={item.comp.status}
+                        handleSubmit={update}
+                        id={item.id}
+                        complaintId={item.comp._id}
+                      />
                     </td>
                   </tr>
-                ));
+                );
               })}
             </tbody>
           </table>
