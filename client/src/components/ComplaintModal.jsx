@@ -15,7 +15,12 @@ const ComplaintModal = ({
 
   const submit = (e) => {
     e.preventDefault();
-    handleSubmit({ id, complaintId });
+
+    let form = new FormData();
+    form.set("comment", comment);
+    form.append("image", image);
+
+    handleSubmit({ id, complaintId, form });
     setOpen(!open);
   };
 
@@ -66,7 +71,7 @@ const ComplaintModal = ({
                         type="file"
                         className="upload"
                         accept="image/*"
-                        onChange={(e) => setImage((e) => e.target.files[0])}
+                        onChange={(e) => setImage(e.target.files[0])}
                       />
                       <span className="btn btn-sm">
                         {image.name ? "Uploaded" : "Image Upload"}

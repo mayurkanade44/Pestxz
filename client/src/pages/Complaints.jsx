@@ -18,8 +18,8 @@ const Complaints = () => {
     // eslint-disable-next-line
   }, [client, status]);
 
-  const update = ({ id, complaintId }) => {
-    dispatch(updateComplaint({ id, complaintId }));
+  const update = ({ id, complaintId, form }) => {
+    dispatch(updateComplaint({ id, complaintId, form }));
   };
 
   return (
@@ -85,6 +85,8 @@ const Complaints = () => {
                         <a
                           style={{ textDecoration: "none", color: "inherit" }}
                           href={item.comp.image}
+                          target="_blank"
+                          rel="noreferrer"
                         >
                           Download
                         </a>

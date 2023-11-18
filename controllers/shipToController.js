@@ -1,7 +1,8 @@
 import ShipTo from "../models/ShipTo.js";
 import Report from "../models/Report.js";
 import Location from "../models/Location.js";
-import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
 
 export const addShipTo = async (req, res) => {
   const { shipToName, shipToAddress } = req.body;
@@ -104,9 +105,29 @@ export const updateComplaint = async (req, res) => {
       _id: id,
     }).select("complaints");
 
+    let image = "";
+    if (req.files) {
+      const result = await cloudinary.uploader.upload(
+        req.files.image.tempFilePath,
+        {
+          use_filename: true,
+          folder: "Pestxz",
+          quality: 40,
+        }
+      );
+      image = result.secure_url;
+      fs.unlinkSync(req.files.image.tempFilePath);
+    }
+
+    console.log(image);
+    console.log(req.body);
+
     for (let item of complaint.complaints) {
       if (item._id.toString() === complaintId) {
         item.status = "Close";
+        item.update.comment = req.body.comment;
+        item.update.image = image;
+        item.update.createdAt = new Date();
         break;
       }
     }
