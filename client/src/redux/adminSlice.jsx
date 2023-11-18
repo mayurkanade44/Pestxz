@@ -169,7 +169,8 @@ export const editLocation = createAsyncThunk(
         `/location/locationServices/${locationId}`,
         location
       );
-      thunkAPI.dispatch(singleClient(clientId));
+
+      thunkAPI.dispatch(singleClient({ id: clientId }));
       return res.data;
     } catch (error) {
       console.log(error);

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allComplaints, updateComplaint } from "../redux/reportSlice";
 import { ComplaintModal, InputSelect, Loading } from "../components";
@@ -14,6 +14,8 @@ const Complaints = () => {
   useEffect(() => {
     dispatch(allComplaints({ client, status }));
     dispatch(getCompanyServices());
+
+    // eslint-disable-next-line
   }, [client, status]);
 
   const update = ({ id, complaintId }) => {

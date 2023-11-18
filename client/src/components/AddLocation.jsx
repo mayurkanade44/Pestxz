@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 
 const AddLocation = ({ clientId, alreadyService, toggle, ser }) => {
   const dispatch = useDispatch();
+  
   const {
     adminLoading,
     companyServices,
@@ -307,7 +308,11 @@ const AddLocation = ({ clientId, alreadyService, toggle, ser }) => {
               onClick={handleSubmit}
               disabled={adminLoading}
             >
-              {adminLoading ? "saving..." : isEditing ? "Update" : "Add Location"}
+              {adminLoading
+                ? "saving..."
+                : isEditing
+                ? "Update"
+                : "Add Location"}
             </button>
             {isEditing && (
               <>
